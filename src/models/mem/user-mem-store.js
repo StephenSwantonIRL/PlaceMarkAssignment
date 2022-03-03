@@ -1,3 +1,4 @@
+/* eslint-disable no-else-return */
 import { v4 } from "uuid";
 
 let users = [];
@@ -9,7 +10,9 @@ export const userMemStore = {
 
   async addUser(user) {
     const userInDb = await this.getUserByEmail(user.email)
-    if (userInDb === undefined){
+    if ((!user.firstName) || (!user.lastName) || (!user.email) || (!user.password)){
+      return new Error("Incomplete User Information");
+    } else if (userInDb === undefined){
       user._id = v4();
       users.push(user);
       return user;

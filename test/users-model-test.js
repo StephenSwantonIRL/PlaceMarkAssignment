@@ -1,6 +1,6 @@
 import { assert } from "chai";
 import { db } from "../src/models/db.js";
-import { maggie, testUsers } from "./fixtures.js";
+import { maggie, suzie, testUsers } from "./fixtures.js";
 import { assertSubset } from "./test-utils.js";
 
 suite("User Model tests", () => {
@@ -14,10 +14,16 @@ suite("User Model tests", () => {
     }
   });
 
-  test("create a user", async () => {
+  test("create a user - successful ", async () => {
     const newUser = await db.userStore.addUser(maggie);
     assertSubset(maggie, newUser);
   });
+
+  test("create a user - failed - missing parameter ", async () => {
+    const newUser = await db.userStore.addUser(suzie);
+    assert.isFalse(assertSubset(suzie, newUser));
+  });
+
 
   test("create a user - failed email already exists", async () => {
     const user = await db.userStore.addUser(maggie);
