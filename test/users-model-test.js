@@ -1,6 +1,6 @@
 import { assert } from "chai";
 import { db } from "../src/models/db.js";
-import { maggie, suzie, testUsers } from "./fixtures.js";
+import { maggie, updatedMaggie, suzie, testUsers } from "./fixtures.js";
 import { assertSubset } from "./test-utils.js";
 
 suite("User Model tests", () => {
@@ -68,4 +68,14 @@ suite("User Model tests", () => {
     const allUsersPostTest = await db.userStore.getAllUsers();
     assert.equal(allUsersPreTest.length, allUsersPostTest.length);
   });
+
+  test("update a user - success", async () => {
+    const user = await db.userStore.addUser(maggie);
+    assert.equal(user, maggie);
+    const updatedUser = updatedMaggie;
+    await db.userStore.updateUser(user._id, updatedUser);
+    const finalUser = await db.userStore.getUserById(userId);
+    assert.deepEqual(finalUser, updatedUser);
+  });
+
 });

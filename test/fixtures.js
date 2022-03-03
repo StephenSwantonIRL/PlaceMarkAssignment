@@ -5,6 +5,14 @@ export const maggie = {
   password: "secret"
 };
 
+export const updatedMaggie = {
+  firstName: "Maggie",
+  lastName: "Simpson",
+  email: "maggie@simpson.com",
+  password: "updatedSecret"
+};
+
+
 export const suzie = {
   firstName: "Suzie",
   email: "suzie@simpson.com",
