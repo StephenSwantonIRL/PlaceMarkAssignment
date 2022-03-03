@@ -20,12 +20,18 @@ export const accountsController = {
       payload: UserSpec,
       options: { abortEarly: false },
       failAction: function (request, h, error) {
+        console.log(error.details)
         return h.view("signup-view", { title: "Sign up error", errors: error.details }).takeover().code(400);
       },
     },
     handler: async function (request, h) {
       const user = request.payload;
-      await db.userStore.addUser(user);
+      console.log(await db.userStore.getAllUsers());
+      const addUser = await db.userStore.addUser(user);
+      if(addUser.message){
+        const errorDetails  = [{message: addUser.message}]
+        return h.view("signup-view", { title: "Sign up error", errors: errorDetails }).takeover().code(400);
+      };
       return h.redirect("/");
     },
   },
