@@ -6,7 +6,7 @@ import { assertSubset } from "./test-utils.js";
 suite("User Model tests", () => {
 
   setup(async () => {
-    db.init("json");
+    db.init("mem");
     await db.userStore.deleteAll();
     for (let i = 0; i < testUsers.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
@@ -17,6 +17,13 @@ suite("User Model tests", () => {
   test("create a user", async () => {
     const newUser = await db.userStore.addUser(maggie);
     assertSubset(maggie, newUser);
+  });
+
+  test("create a user - failed email already exists", async () => {
+    const user = await db.userStore.addUser(maggie);
+    const newUser = await db.userStore.addUser(maggie);
+    assert.equal(newUser.message, "User Already Exists")
+
   });
 
   test("delete all userApi", async () => {
@@ -40,18 +47,19 @@ suite("User Model tests", () => {
     const returnedUsers = await db.userStore.getAllUsers();
     assert.equal(returnedUsers.length, testUsers.length - 1);
     const deletedUser = await db.userStore.getUserById(testUsers[0]._id);
-    assert.isNull(deletedUser);
+    assert.isUndefined(deletedUser);
   });
 
   test("get a user - bad params", async () => {
-    assert.isNull(await db.userStore.getUserByEmail(""));
-    assert.isNull(await db.userStore.getUserById(""));
-    assert.isNull(await db.userStore.getUserById());
+    assert.isUndefined(await db.userStore.getUserByEmail(""));
+    assert.isUndefined(await db.userStore.getUserById(""));
+    assert.isUndefined(await db.userStore.getUserById());
   });
 
   test("delete One User - fail", async () => {
+    const allUsersPreTest = await db.userStore.getAllUsers();
     await db.userStore.deleteUserById("bad-id");
-    const allUsers = await db.userStore.getAllUsers();
-    assert.equal(testUsers.length, allUsers.length);
+    const allUsersPostTest = await db.userStore.getAllUsers();
+    assert.equal(allUsersPreTest.length, allUsersPostTest.length);
   });
 });

@@ -8,9 +8,16 @@ export const userMemStore = {
   },
 
   async addUser(user) {
-    user._id = v4();
-    users.push(user);
-    return user;
+    const userInDb = await this.getUserByEmail(user.email)
+    if (userInDb === undefined){
+      user._id = v4();
+      users.push(user);
+      return user;
+    } else {
+      // eslint-disable-next-line no-throw-literal
+      return new Error("User Already Exists");
+    }
+
   },
 
   async getUserById(id) {

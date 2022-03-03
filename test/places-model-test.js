@@ -6,14 +6,17 @@ import { assertSubset } from "./test-utils.js";
 suite("Place Model tests", () => {
 
   setup(async () => {
-    db.init("mongo");
+    db.init("mem");
     await db.placeStore.deleteAll();
   });
 
   test("create a place", async () => {
+    const allPlacesPre = await db.placeStore.getAllPlaces();
+    assert.isFalse(assertSubset(longplayer, allPlacesPre));
     const newPlace = await db.placeStore.addPlace(longplayer);
-    console.log(newPlace)
-    assertSubset(longplayer, newPlace);
+    const allPlacesPost = await db.placeStore.getAllPlaces();
+    console.log(newPlace);
+    assertSubset(longplayer, allPlacesPost);
   });
 
   test("delete a place - fail", async () => {
