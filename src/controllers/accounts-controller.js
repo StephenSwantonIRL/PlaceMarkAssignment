@@ -20,25 +20,23 @@ export const accountsController = {
       payload: UserSpec,
       options: { abortEarly: false },
       failAction: function (request, h, error) {
-        console.log(error.details)
+        console.log(error.details);
         return h.view("signup-view", { title: "Sign up error", errors: error.details }).takeover().code(400);
       },
     },
     handler: async function (request, h) {
       const user = request.payload;
-      console.log(await db.userStore.getAllUsers());
       const addUser = await db.userStore.addUser(user);
-      if(addUser.message){
-        const errorDetails  = [{message: addUser.message}]
+      if (addUser.message) {
+        const errorDetails = [{ message: addUser.message }];
         return h.view("signup-view", { title: "Sign up error", errors: errorDetails }).takeover().code(400);
-      };
+      }
       return h.redirect("/");
     },
   },
   showLogin: {
     auth: false,
     handler: function (request, h) {
-
       return h.view("login-view", { title: "Login to Playlist" });
     },
   },
@@ -48,12 +46,16 @@ export const accountsController = {
       payload: UserCredentialsSpec,
       options: { abortEarly: false },
       failAction: function (request, h, error) {
+        console.log(`Validation Error${error.details}`);
         return h.view("login-view", { title: "Log in error", errors: error.details }).takeover().code(400);
       },
     },
     handler: async function (request, h) {
       const { email, password } = request.payload;
+      console.log(email);
+      await console.log(db.userStore.getAllUsers());
       const user = await db.userStore.getUserByEmail(email);
+      console.log(user);
       if (!user || user.password !== password) {
         return h.redirect("/");
       }
@@ -65,6 +67,26 @@ export const accountsController = {
     handler: function (request, h) {
       request.cookieAuth.clear();
       return h.redirect("/");
+    },
+  },
+
+  update: {
+    validate: {
+      payload: UserSpec,
+      options: { abortEarly: false },
+      failAction: function (request, h, error) {
+        return h.view("user-edit-view", { title: "Error Editing Details", errors: error.details }).takeover().code(400);
+      },
+    },
+    handler: async function (request, h) {
+      const updatedUser = request.payload;
+      const userId = request.state.placemark.id;
+      const updateUser = await db.userStore.updateUser(userId, updatedUser);
+      if (updateUser.message) {
+        const errorDetails = [{ message: updateUser.message }];
+        return h.view("user-edit-view", { title: "Failed to Edit", errors: errorDetails }).takeover().code(400);
+      }
+      return h.redirect("/dashboard");
     },
   },
 

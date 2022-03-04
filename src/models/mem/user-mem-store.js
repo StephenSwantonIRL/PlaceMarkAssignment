@@ -58,5 +58,6 @@ export const userMemStore = {
 
   async deleteAll() {
     users = [];
+    return users;
   },
 };
