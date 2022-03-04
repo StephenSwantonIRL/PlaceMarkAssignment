@@ -71,10 +71,12 @@ suite("User Model tests", () => {
 
   test("update a user - success", async () => {
     const user = await db.userStore.addUser(maggie);
-    assert.equal(user, maggie);
+    maggie._id = user._id;
+    assert.deepEqual(user, maggie);
     const updatedUser = updatedMaggie;
+    updatedUser._id = user._id
     await db.userStore.updateUser(user._id, updatedUser);
-    const finalUser = await db.userStore.getUserById(userId);
+    const finalUser = await db.userStore.getUserById(user._id);
     assert.deepEqual(finalUser, updatedUser);
   });
 
