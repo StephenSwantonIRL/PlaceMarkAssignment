@@ -1,10 +1,13 @@
-import { assert } from "chai";
+import { assert, expect } from "chai";
+import chai from "chai";
+import chaiAsPromised from "chai-as-promised";
 import { db } from "../src/models/db.js";
 import { maggie, updatedMaggie, suzie, testUsers } from "./fixtures.js";
 import { assertSubset } from "./test-utils.js";
 
-suite("User Model tests", () => {
+chai.use(chaiAsPromised);
 
+suite("User Model tests", () => {
   setup(async () => {
     db.init("mem");
     await db.userStore.deleteAll();
@@ -24,12 +27,10 @@ suite("User Model tests", () => {
     assert.isFalse(assertSubset(suzie, newUser));
   });
 
-
   test("create a user - failed email already exists", async () => {
     const user = await db.userStore.addUser(maggie);
     const newUser = await db.userStore.addUser(maggie);
-    assert.equal(newUser.message, "User Already Exists")
-
+    assert.equal(newUser.message, "User Already Exists");
   });
 
   test("delete all userApi", async () => {
@@ -74,10 +75,17 @@ suite("User Model tests", () => {
     maggie._id = user._id;
     assert.deepEqual(user, maggie);
     const updatedUser = updatedMaggie;
-    updatedUser._id = user._id
+    updatedUser._id = user._id;
     await db.userStore.updateUser(user._id, updatedUser);
     const finalUser = await db.userStore.getUserById(user._id);
     assert.deepEqual(finalUser, updatedUser);
   });
 
+  test("update a user - fail - another user with same email", async () => {
+    const user = await db.userStore.addUser(maggie);
+    const updatedUser = updatedMaggie;
+    updatedUser.email = "bart@simpson2.com";
+    updatedUser._id = user._id;
+    await expect(db.userStore.updateUser(user._id, updatedUser)).to.be.rejectedWith("Another user is already using that email address");
+  });
 });
