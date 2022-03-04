@@ -23,6 +23,29 @@ export const userMemStore = {
 
   },
 
+  async updateUser(userId, updatedUser) {
+    const user = await this.getUserById(userId)
+    if (user !== undefined) {
+      user.firstName = updatedUser.firstName
+      user.lastName = updatedUser.lastName;
+      if (user.email !== updatedUser.email) {
+        const updatedEmailInDb = await this.getUserByEmail(updatedUser.email)
+        if (updatedEmailInDb === undefined) {
+          user.email = updatedUser.email;
+
+        } else {
+          return new Error("Another user is already using that email address")
+        }
+      }
+      user.password = updatedUser.password;
+      users.push(user);
+      return user;
+
+    } else {
+      return new Error("User does not exist")
+    }
+  },
+
   async getUserById(id) {
     return users.find((user) => user._id === id);
   },
