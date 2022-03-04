@@ -1,23 +1,30 @@
-export const maggie = {
+export const maggie =   {
   firstName: "Maggie",
   lastName: "Simpson",
   email: "maggie@simpson.com",
-  password: "secret"
-};
+  password: "secret",
+}
 
-export const updatedMaggie = {
+export const updatedMaggie =   {
   firstName: "Maggie",
   lastName: "Simpson",
   email: "maggie@simpson.com",
-  password: "updatedSecret"
-};
-
+  password: "updatedSecret",
+}
 
 export const suzie = {
   firstName: "Suzie",
   email: "suzie@simpson.com",
   password: "secret"
 };
+
+export const stephen = {
+  firstName: "Stephen",
+  lastName: "Swanton",
+  email: "stephenswanton@gmail.com",
+  password: "secret"
+};
+
 
 export const testUsers = [
   {
