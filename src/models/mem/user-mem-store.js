@@ -9,10 +9,10 @@ export const userMemStore = {
   },
 
   async addUser(user) {
-    const userInDb = await this.getUserByEmail(user.email)
-    if ((!user.firstName) || (!user.lastName) || (!user.email) || (!user.password)){
+    const userInDb = await this.getUserByEmail(user.email);
+    if (!user.firstName || !user.lastName || !user.email || !user.password) {
       return new Error("Incomplete User Information");
-    } else if (userInDb === undefined){
+    } else if (userInDb === undefined) {
       user._id = v4();
       users.push(user);
       return user;
@@ -20,29 +20,26 @@ export const userMemStore = {
       // eslint-disable-next-line no-throw-literal
       return new Error("User Already Exists");
     }
-
   },
 
   async updateUser(userId, updatedUser) {
-    const user = await this.getUserById(userId)
+    const user = await this.getUserById(userId);
     if (user !== undefined) {
-      user.firstName = updatedUser.firstName
+      user.firstName = updatedUser.firstName;
       user.lastName = updatedUser.lastName;
       if (user.email !== updatedUser.email) {
-        const updatedEmailInDb = await this.getUserByEmail(updatedUser.email)
+        const updatedEmailInDb = await this.getUserByEmail(updatedUser.email);
         if (updatedEmailInDb === undefined) {
           user.email = updatedUser.email;
-
         } else {
-          return new Error("Another user is already using that email address")
+          return Promise.reject(Error("Another user is already using that email address"));
         }
       }
       user.password = updatedUser.password;
       users.push(user);
       return user;
-
     } else {
-      return new Error("User does not exist")
+      return Promise.reject(Error("User does not exist"));
     }
   },
 
