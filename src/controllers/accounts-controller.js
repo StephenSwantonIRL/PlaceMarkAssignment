@@ -70,12 +70,26 @@ export const accountsController = {
     },
   },
 
+
+  edit: {
+    handler: async function (request, h) {
+      const currentUserId = request.state.placemark.id;
+      if (!currentUserId){
+        return h.redirect("/");
+      }
+        const currentUser = await db.userStore.getUserById(currentUserId);
+        console.log(currentUser)
+        return h.view("edit-user-view", { title: "Edit your details", user: currentUser });
+
+
+    },
+  },
   update: {
     validate: {
       payload: UserSpec,
-      options: { abortEarly: false },
+      options: { abortEarly: true },
       failAction: function (request, h, error) {
-        return h.view("user-edit-view", { title: "Error Editing Details", errors: error.details }).takeover().code(400);
+        return h.view("edit-user-view", { title: "Error Editing Details", errors: error.details, user: request.payload }).takeover().code(400);
       },
     },
     handler: async function (request, h) {
@@ -84,7 +98,7 @@ export const accountsController = {
       const updateUser = await db.userStore.updateUser(userId, updatedUser);
       if (updateUser.message) {
         const errorDetails = [{ message: updateUser.message }];
-        return h.view("user-edit-view", { title: "Failed to Edit", errors: errorDetails }).takeover().code(400);
+        return h.view("edit-user-view", { title: "Failed to Edit", errors: errorDetails }).takeover().code(400);
       }
       return h.redirect("/dashboard");
     },
