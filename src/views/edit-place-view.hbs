@@ -1,0 +1,40 @@
+{{> menu active="placeMark"}}
+
+<section class="section">
+  <h1 class="title">Add a PlaceMark</h1>
+  <form action="/addPlace" method="POST">
+    <div class="field">
+      <label class="label">Name</label> <input class="input" type="text" placeholder="Enter PlaceMark Name" name="name" value="{{place.name}}">
+    </div>
+    <div class="field">
+      <label class="label">Location</label> <input class="input" type="text" placeholder="Enter Address" name="location" value="{{place.location}}">
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-body">
+        <div class="field">
+          <input class="input" type="text" placeholder="Enter latitude" name="latitude" value="{{place.latitude}}">
+        </div>
+        <div class="field">
+          <input class="input" type="text" placeholder="Enter longitude" name="longitude" value="{{place.longitude}}">
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Description</label>
+      <textarea name="description" id="ck-editor" placeholder="Tell us about this PlaceMark">
+        {{place.description}}
+        </textarea>
+    </div>
+    <div class="field is-grouped">
+      <button class="button is-link">Add PlaceMark</button>
+    </div>
+  </form>
+</section>
+<script>
+
+  ClassicEditor
+    .create( document.querySelector( '#ck-editor' ) )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
