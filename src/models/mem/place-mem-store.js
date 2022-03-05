@@ -1,28 +1,40 @@
 import { v4 } from "uuid";
 
-let places = [];
+
 
 export const placeMemStore = {
-  async getAllPlaces() {
-    return places;
+  places: [],
+  getAllPlaces() {
+    return this.places;
   },
 
   async addPlace(place) {
     place._id = v4();
-    places.push(place);
+    this.places.push(place);
     return place;
   },
 
   async getPlaceById(id) {
-    return places.find((place) => place._id === id);
+    return this.places.find((place) => place._id === id);
   },
 
-  async deletePlaceById(id) {
-    const index = places.findIndex((place) => place._id === id);
-    places.splice(index, 1);
+  async updatePlace(id, updatedPlace) {
+    const place = await this.getPlaceById(id);
+    place.name = updatedPlace.name;
+    place.location = updatedPlace.location;
+    place.latitude = updatedPlace.latitude;
+    place.longitude = updatedPlace.longitude;
+    place.description = updatedPlace.description;
+    place.images = updatedPlace.images;
+  },
+
+
+  async deletePlaceById(id, createdBy) {
+    const index = this.places.findIndex((place) => place._id === id);
+    this.places.splice(index, 1);
   },
 
   async deleteAll() {
-    places = [];
+    this.places = [];
   },
 };

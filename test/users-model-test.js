@@ -1,6 +1,7 @@
 import { assert, expect } from "chai";
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
+import _ from "lodash";
 import { db } from "../src/models/db.js";
 import { maggie, updatedMaggie, suzie, testUsers } from "./fixtures.js";
 import { assertSubset } from "./test-utils.js";
@@ -51,7 +52,7 @@ suite("User Model tests", () => {
 
   test("delete One User - success", async () => {
     await db.userStore.deleteUserById(testUsers[0]._id);
-    const returnedUsers = await db.userStore.getAllUsers();
+    const returnedUsers = await _.clone(db.userStore.getAllUsers());
     assert.equal(returnedUsers.length, testUsers.length - 1);
     const deletedUser = await db.userStore.getUserById(testUsers[0]._id);
     assert.isUndefined(deletedUser);
@@ -64,9 +65,9 @@ suite("User Model tests", () => {
   });
 
   test("delete One User - fail", async () => {
-    const allUsersPreTest = await db.userStore.getAllUsers();
+    const allUsersPreTest = await _.clone(db.userStore.getAllUsers());
     await db.userStore.deleteUserById("bad-id");
-    const allUsersPostTest = await db.userStore.getAllUsers();
+    const allUsersPostTest = await _.clone(db.userStore.getAllUsers());
     assert.equal(allUsersPreTest.length, allUsersPostTest.length);
   });
 

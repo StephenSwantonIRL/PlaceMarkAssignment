@@ -13,3 +13,15 @@ export function assertSubset(subset, superset) {
     return true;
   });
 }
+
+export function assertObjectinArray(object, array){
+
+  for(let i = 0; i< array.length; i++){
+    if(array[i] === object){
+      return true;
+    }
+    return false;
+  }
+
+
+}

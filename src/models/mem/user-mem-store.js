@@ -1,11 +1,10 @@
 /* eslint-disable no-else-return */
 import { v4 } from "uuid";
 
-let users = [];
-
 export const userMemStore = {
-  async getAllUsers() {
-    return users;
+  users: [],
+  getAllUsers() {
+    return this.users;
   },
 
   async addUser(user) {
@@ -14,7 +13,7 @@ export const userMemStore = {
       return new Error("Incomplete User Information");
     } else if (userInDb === undefined) {
       user._id = v4();
-      users.push(user);
+      this.users.push(user);
       return user;
     } else {
       // eslint-disable-next-line no-throw-literal
@@ -36,7 +35,7 @@ export const userMemStore = {
         }
       }
       user.password = updatedUser.password;
-      users.push(user);
+      this.users.push(user);
       return user;
     } else {
       return Promise.reject(Error("User does not exist"));
@@ -44,20 +43,23 @@ export const userMemStore = {
   },
 
   async getUserById(id) {
-    return users.find((user) => user._id === id);
+    return this.users.find((user) => user._id === id);
   },
 
   async getUserByEmail(email) {
-    return users.find((user) => user.email === email);
+    return this.users.find((user) => user.email === email);
   },
 
   async deleteUserById(id) {
-    const index = users.findIndex((user) => user._id === id);
-    users.splice(index, 1);
+    const userInDb = await this.getUserById(id);
+    if (userInDb !== undefined) {
+      const index = this.users.findIndex((user) => user._id === id);
+      this.users.splice(index, 1);
+    }
   },
 
   async deleteAll() {
-    users = [];
-    return users;
+    this.users = [];
+    return this.users;
   },
 };

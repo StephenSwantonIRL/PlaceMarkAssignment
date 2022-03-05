@@ -1,7 +1,8 @@
 import { assert } from "chai";
 import { db } from "../src/models/db.js";
 import { longplayer, svalbard, incompleteSvalbard, updatedSvalbard } from "./fixtures.js";
-import { assertSubset } from "./test-utils.js";
+import { assertSubset, assertObjectinArray } from "./test-utils.js";
+import _ from 'lodash';
 
 suite("Place Model tests", () => {
 
@@ -11,17 +12,19 @@ suite("Place Model tests", () => {
   });
 
   test("create a place", async () => {
-    const allPlacesPre = await db.placeStore.getAllPlaces();
+    const allPlacesPre =  await _.clone(db.placeStore.getAllPlaces());
     assert.isFalse(assertSubset(longplayer, allPlacesPre));
     const newPlace = await db.placeStore.addPlace(longplayer);
-    const allPlacesPost = await db.placeStore.getAllPlaces();
+    const allPlacesPost = await _.clone(db.placeStore.getAllPlaces());
     assertSubset(longplayer, allPlacesPost);
+    assert.notEqual(allPlacesPre, allPlacesPost)
+    assert.equal(allPlacesPost.length, allPlacesPre + 1)
   });
 
   test("create a place - failed - missing required parameter ", async () => {
     await db.placeStore.addPlace(incompleteSvalbard);
-    const allPlaces = await db.placeStore.getAllPlaces();
-    assert.isFalse(assertSubset(incompleteSvalbard, allPlaces));
+    const allPlaces = await _.clone(db.placeStore.getAllPlaces());
+    assert.isFalse(allPlaces.includes(incompleteSvalbard))
   });
 
   test("delete a place - fail - bad id ", async () => {
@@ -34,21 +37,22 @@ suite("Place Model tests", () => {
   test("delete a place - fail - not created by current user", async () => {
     const placeToDelete = await db.placeStore.addPlace(svalbard);
     const placeId = placeToDelete._id;
-    const allPlacesPre = await db.placeStore.getAllPlaces();
+    const allPlacesPre =  await _.clone(db.placeStore.getAllPlaces());
     const currentUser = "125634"
     await db.placeStore.deletePlaceById(placeId, currentUser);
-    const allPlacesPost = await db.placeStore.getAllPlaces();
+    const allPlacesPost = await _.clone(db.placeStore.getAllPlaces());
     assert.equal(allPlacesPre.length, allPlacesPost.length);
-    assertSubset( placeToDelete, allPlacesPost);
+    const assertion = assertSubset( placeToDelete, allPlacesPost);
+
   });
 
   test("delete a place - success ", async () => {
     const placeToDelete = await db.placeStore.addPlace(longplayer);
-    const allPlacesPre = await db.placeStore.getAllPlaces();
+    const allPlacesPre = await _.clone(db.placeStore.getAllPlaces());
     const currentUserId = placeToDelete.createdBy;
     await db.placeStore.deletePlaceById(placeToDelete._id, currentUserId);
-    const allPlacesPost = await db.placeStore.getAllPlaces();
-    assert.equal(allPlacesPre.length, allPlacesPost.length);
+    const allPlacesPost = await _.clone(db.placeStore.getAllPlaces());
+    assert.notEqual(allPlacesPre.length, allPlacesPost.length);
     assert.isFalse(assertSubset(longplayer, allPlacesPost));
   });
 
@@ -57,11 +61,14 @@ suite("Place Model tests", () => {
     svalbard._id = place._id;
     const editor = place.createdBy
     assert.deepEqual(place, svalbard);
+    const allPlaces = await _.clone(db.placeStore.getAllPlaces());
     const updatedPlace = updatedSvalbard;
     updatedPlace._id = place._id;
     await db.placeStore.updatePlace(place._id, updatedPlace);
     const finalPlace = await db.placeStore.getPlaceById(place._id);
+    const finalPlaces = await _.clone(db.placeStore.getAllPlaces());
     assert.deepEqual(finalPlace, updatedPlace);
+    assert.equal(allPlaces.length, finalPlaces.length)
   });
 
 });
