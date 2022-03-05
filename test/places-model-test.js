@@ -71,4 +71,18 @@ suite("Place Model tests", () => {
     assert.equal(allPlaces.length, finalPlaces.length)
   });
 
+
+  test("get all places created by a specific user", async () => {
+    await db.placeStore.addPlace(longplayer)
+    const place = await db.placeStore.addPlace(svalbard)
+    const allPlaces = await _.clone(db.placeStore.getAllPlaces())
+    const userId = 1223355634
+    const usersPlaces = await db.placeStore.getUserPlaces(userId);
+    assertSubset(svalbard, usersPlaces);
+    assert.notEqual(usersPlaces.length, allPlaces.length)
+
+  });
+
+
+
 });
