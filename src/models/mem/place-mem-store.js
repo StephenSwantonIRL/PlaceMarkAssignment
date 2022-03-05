@@ -8,6 +8,15 @@ export const placeMemStore = {
     return this.places;
   },
 
+  getUserPlaces(userId) {
+    const userPlaces = this.places.filter((place) => place.createdBy === userId);
+    return userPlaces
+  },
+
+  getOtherUserPlaces(userId) {
+    const userPlaces = this.places.filter((place) => place.createdBy !== userId);
+    return userPlaces
+  },
   async addPlace(place) {
     place._id = v4();
     this.places.push(place);
@@ -38,3 +47,4 @@ export const placeMemStore = {
     this.places = [];
   },
 };
+
