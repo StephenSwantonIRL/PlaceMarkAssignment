@@ -1,6 +1,6 @@
 import { assert } from "chai";
 import { db } from "../src/models/db.js";
-import { longplayer, svalbard, incompleteSvalbard, updatedSvalbard } from "./fixtures.js";
+import { longplayer, svalbard, incompleteSvalbard, updatedSvalbard, sealIsland } from "./fixtures.js";
 import { assertSubset, assertObjectinArray } from "./test-utils.js";
 import _ from 'lodash';
 
@@ -73,13 +73,16 @@ suite("Place Model tests", () => {
 
 
   test("get all places created by a specific user", async () => {
-    await db.placeStore.addPlace(longplayer)
-    const place = await db.placeStore.addPlace(svalbard)
+    await db.placeStore.addPlace(longplayer);
+    const placeOne = await db.placeStore.addPlace(svalbard);
+    const placeTwo = await db.placeStore.addPlace(sealIsland);
     const allPlaces = await _.clone(db.placeStore.getAllPlaces())
-    const userId = 1223355634
-    const usersPlaces = await db.placeStore.getUserPlaces(userId);
+    const userId = svalbard.createdBy
+    const usersPlaces = await _.clone(db.placeStore.getUserPlaces(userId));
+    console.log(usersPlaces)
     assertSubset(svalbard, usersPlaces);
-    assert.notEqual(usersPlaces.length, allPlaces.length)
+    assertSubset(sealIsland, usersPlaces);
+    assert.isFalse(assertSubset(longplayer, usersPlaces));
 
   });
 
