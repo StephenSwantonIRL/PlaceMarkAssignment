@@ -1,5 +1,6 @@
 import axios from "axios";
 import { serviceUrl } from "../fixtures.js";
+import { svalbard} from "../fixtures.js";
 
 export const placeMarkService = {
   placeMarkUrl: serviceUrl,
@@ -25,7 +26,7 @@ export const placeMarkService = {
   },
 
   async createPlace(place) {
-    const res = await axios.post(`${this.placeMarkUrl}/api/placemark`, playlist);
+    const res = await axios.post(`${this.placeMarkUrl}/api/placemark`, place);
     return res.data;
   },
 
@@ -45,7 +46,8 @@ export const placeMarkService = {
   },
 
   async getPlace(id) {
-    const res = await axios.get(`${this.placeMarkUrl}/api/playmark/${id}`);
+    const res = await axios.get(`${this.placeMarkUrl}/api/placemark/${id}`);
     return res.data;
   },
 };
+
