@@ -1,9 +1,9 @@
 import chai from "chai";
 import chaiHttp from "chai-http";
-import { userMemStore } from "../src/models/mem/user-mem-store.js";
-import { placeMemStore } from  "../src/models/mem/place-mem-store.js"
-import { maggie, longplayer, svalbard, incompleteSvalbard } from "./fixtures.js";
-import { assertSubset } from "./test-utils.js";
+import { userMemStore } from "../../src/models/mem/user-mem-store.js";
+import { placeMemStore } from "../../src/models/mem/place-mem-store.js"
+import { maggie, longplayer, svalbard, incompleteSvalbard } from "../fixtures.js";
+import { assertSubset } from "../test-utils.js";
 
 const should = chai.should();
 const { assert, expect } = chai;

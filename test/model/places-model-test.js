@@ -1,7 +1,7 @@
 import { assert } from "chai";
-import { db } from "../src/models/db.js";
-import { longplayer, svalbard, incompleteSvalbard, updatedSvalbard, sealIsland } from "./fixtures.js";
-import { assertSubset, assertObjectinArray } from "./test-utils.js";
+import { db } from "../../src/models/db.js";
+import { longplayer, svalbard, incompleteSvalbard, updatedSvalbard, sealIsland } from "../fixtures.js";
+import { assertSubset, assertObjectinArray } from "../test-utils.js";
 import _ from 'lodash';
 
 suite("Place Model tests", () => {

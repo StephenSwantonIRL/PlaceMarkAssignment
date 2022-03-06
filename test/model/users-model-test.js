@@ -2,9 +2,9 @@ import { assert, expect } from "chai";
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
 import _ from "lodash";
-import { db } from "../src/models/db.js";
-import { maggie, updatedMaggie, suzie, testUsers } from "./fixtures.js";
-import { assertSubset } from "./test-utils.js";
+import { db } from "../../src/models/db.js";
+import { maggie, updatedMaggie, suzie, testUsers } from "../fixtures.js";
+import { assertSubset } from "../test-utils.js";
 
 chai.use(chaiAsPromised);
 
