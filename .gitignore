@@ -128,3 +128,6 @@ dist
 .eslintrc.json
 .prettierrc.json
 .env
+
+# IDE
+.idea

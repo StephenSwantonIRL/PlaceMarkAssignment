@@ -2,6 +2,7 @@ import { aboutController } from "./controllers/about-controller.js";
 import { accountsController } from "./controllers/accounts-controller.js";
 import { dashboardController } from "./controllers/dashboard-controller.js";
 import { placeController } from "./controllers/placemark-controller.js";
+import { placeApi } from "../api/place-api.js";
 
 
 export const webRoutes = [
@@ -20,5 +21,6 @@ export const webRoutes = [
   { method: "GET", path: "/about", config: aboutController.index },
 
   { method: "GET", path: "/dashboard", config: dashboardController.index },
-  { method: 'POST', path: '/formpayload', config: aboutController.form }
+  { method: "POST", path: "/formpayload", config: aboutController.form },
+  { method: "GET", path: "/api/placemark/{id}", config: placeApi.findOne }
 ];

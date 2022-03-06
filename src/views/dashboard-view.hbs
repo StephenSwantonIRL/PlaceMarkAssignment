@@ -20,7 +20,9 @@
         <td>{{location}}</td>
         <td>{{latitude}}</td>
         <td>{{longitude}}</td>
-        <td></td>
+        <td><button onclick="openModal('{{_id}}')">
+          View
+        </button></td>
       </tr>
       {{/each}}
     </tbody>
@@ -49,4 +51,37 @@
     </tbody>
   </table>
 </section>
+<dialog id="modal-dialog">
+  <div class="container"><h2 class="title is-2" id="placeMarkName"></h2></div>
+  <div class="container"><div class="label">Location</div><div><h4 id="placeMarkLocation"></h4></div></div>
+  <div class="container"><div><div class="label">Latitude</div><div><p id="placeMarkLatitude"></p></div><div><div><div class="label">Longitude</div><div><p id="placeMarkLongitude"></p></div></div></div>
+  <div class="container"><h4 class="title is-4">About this PlaceMark</h4></div>
+  <div class="container" id="placeMarkDescription"></div>
 
+  <p><a onclick="closeModal()">Close</a></p>
+</dialog>
+
+<script>
+
+  function openModal(id) {
+    let apiCall = window.location.protocol+"//"+window.location.hostname+':'+window.location.port+"/api/placemark/"+id
+    fetch(apiCall)
+      .then(data => {
+        return data.json()
+      })
+    .then(placeMark => {
+        console.log(placeMark)
+        console.log(placeMark.name)
+        document.getElementById('placeMarkName').innerText = placeMark.name;
+        document.getElementById('placeMarkLocation').innerText = placeMark.location;
+        document.getElementById('placeMarkLatitude').innerText = placeMark.latitude;
+        document.getElementById('placeMarkLongitude').innerText = placeMark.longitude;
+        document.getElementById('placeMarkDescription').innerHTML = placeMark.description;
+        document.querySelector("#modal-dialog").showModal();
+      })
+
+  }
+  function closeModal(){
+    document.querySelector("#modal-dialog").close();
+  }
+</script>

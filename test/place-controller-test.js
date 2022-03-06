@@ -35,7 +35,7 @@ describe("User Test Set Up", async () => {
           .post("/addPlace").send(longplayer)
           .then((res) => {
             expect(res).to.have.status(200);
-            res.text.should.contain("<title>Longplayer</title>")
+            res.text.should.contain("Longplayer")
           })
           .then(() => res.agent.close());
       });

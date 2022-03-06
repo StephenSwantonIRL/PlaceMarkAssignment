@@ -30,7 +30,7 @@ export const placeController = {
         const errorDetails = [{ message: addPlace.message }];
         return h.view("edit-place-view", { title: "Error Saving PlaceMark", errors: errorDetails }).takeover().code(400);
       }
-      return h.view("edit-place-view", { title: addPlace.name, "place": addPlace });
+      return h.redirect("/dashboard");
     },
   },
 };
