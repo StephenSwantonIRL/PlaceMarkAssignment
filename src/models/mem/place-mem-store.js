@@ -18,9 +18,13 @@ export const placeMemStore = {
     return userPlaces
   },
   async addPlace(place) {
-    place._id = v4();
-    this.places.push(place);
-    return place;
+    if (!place.name || !place.location || !place.latitude || !place.longitude || !place.createdBy) {
+      return new Error("Incomplete Place Information");
+    } else  {
+      place._id = v4();
+      this.places.push(place);
+      return place;
+    }
   },
 
   async getPlaceById(id) {
@@ -39,8 +43,17 @@ export const placeMemStore = {
 
 
   async deletePlaceById(id, createdBy) {
-    const index = this.places.findIndex((place) => place._id === id);
-    this.places.splice(index, 1);
+    const placeInDb = await this.getPlaceById(id);
+    if (placeInDb !== undefined) {
+      const placeCreatedBy = placeInDb.createdBy;
+      if (placeCreatedBy === createdBy) {
+        const index = this.places.findIndex((place) => place._id === id);
+        this.places.splice(index, 1);
+      }
+    } else {
+      return new Error("No Placemark with that Id");
+    }
+
   },
 
   async deleteAll() {
