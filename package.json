@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node src/server.js",
     "lint": "node node_modules/.bin/eslint . --ext .js",
-    "test": "node node_modules/mocha/bin/mocha --ui tdd test/**.js"
+    "test": "node node_modules/mocha/bin/mocha --ui tdd test/**/*.js"
+
   },
   "dependencies": {
     "@hapi/boom": "^9.1.4",
