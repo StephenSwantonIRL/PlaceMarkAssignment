@@ -3,7 +3,7 @@ import { v4 } from "uuid";
 
 export const userMemStore = {
   users: [],
-  getAllUsers() {
+  async getAllUsers() {
     return this.users;
   },
 
@@ -11,7 +11,7 @@ export const userMemStore = {
     const userInDb = await this.getUserByEmail(user.email);
     if (!user.firstName || !user.lastName || !user.email || !user.password) {
       return new Error("Incomplete User Information");
-    } else if (userInDb === undefined) {
+    } else if (userInDb === null) {
       user._id = v4();
       this.users.push(user);
       return user;
@@ -43,11 +43,19 @@ export const userMemStore = {
   },
 
   async getUserById(id) {
-    return this.users.find((user) => user._id === id);
+    let returnedUser = this.users.find((user) => user._id === id);
+    if (returnedUser === undefined) {
+      returnedUser = null;
+    }
+    return returnedUser;
   },
 
   async getUserByEmail(email) {
-    return this.users.find((user) => user.email === email);
+    let returnedUser = this.users.find((user) => user.email === email);
+    if (returnedUser === undefined) {
+      returnedUser = null;
+    }
+    return returnedUser;
   },
 
   async deleteUserById(id) {
