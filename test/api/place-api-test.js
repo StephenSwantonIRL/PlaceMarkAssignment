@@ -9,10 +9,8 @@ suite("PlaceMark API tests", () => {
   let user = null;
 
   setup(async () => {
-    // await placeMarkService.deleteAllPlaces();
-    // await placeMarkService.deleteAllUsers();
-    // user = await placeMarkService.createUser(maggie);
-    // svalbard.createdBy = user._id;
+     await placeMarkService.deleteAllPlaces();
+     svalbard.createdBy = 2234347347;
   });
 
   teardown(async () => {});
@@ -21,6 +19,22 @@ suite("PlaceMark API tests", () => {
     const returnedPlace = await placeMarkService.createPlace(svalbard);
     assert.isNotNull(returnedPlace);
     assertSubset(svalbard, returnedPlace);
+  });
+
+  test("return a place", async () => {
+    const createdPlace = await placeMarkService.createPlace(svalbard);
+    const returnedPlace = await placeMarkService.getPlace(createdPlace._id)
+    assert.isNotNull(returnedPlace);
+    assertSubset(svalbard, returnedPlace);
+  });
+
+  test("attempt to return a non-existent place", async () => {
+    try {
+      const returnedPlace = await placeMarkService.getPlace("bad-id");
+      assert.fail("Should not return a response");
+    } catch (error) {
+      assert(error.response.data.message === "No PlaceMark with this id", "Incorrect Response Message");
+    }
   });
 
   test("delete a place", async () => {

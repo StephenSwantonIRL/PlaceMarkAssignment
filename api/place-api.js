@@ -67,7 +67,7 @@ export const placeApi = {
     auth: false,
     handler: async function (request, h) {
       try {
-        await db.placeStore.deleteAllPlaces();
+        await db.placeStore.deleteAll();
         return h.response().code(204);
       } catch (err) {
         return Boom.serverUnavailable("Database Error");
