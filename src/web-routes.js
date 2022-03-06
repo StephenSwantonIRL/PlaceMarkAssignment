@@ -22,5 +22,5 @@ export const webRoutes = [
 
   { method: "GET", path: "/dashboard", config: dashboardController.index },
   { method: "POST", path: "/formpayload", config: aboutController.form },
-  { method: "GET", path: "/api/placemark/{id}", config: placeApi.findOne }
+
 ];
