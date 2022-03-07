@@ -9,8 +9,8 @@ export const dashboardController = {
       const userId = request.state.placemark.id
       console.log("UserID from Cookie")
       console.log(userId)
-      const myPlaceMarks = await _.clone(db.placeStore.getUserPlaces(userId));
-      const othersPlaceMarks = await _.clone(db.placeStore.getOtherUserPlaces(userId));
+      const myPlaceMarks = await db.placeStore.getUserPlaces(userId);
+      const othersPlaceMarks = await db.placeStore.getOtherUserPlaces(userId);
       console.log("Others Place Marks")
       console.log(othersPlaceMarks)
       const viewData = {

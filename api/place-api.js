@@ -35,6 +35,7 @@ export const placeApi = {
       try {
         const place = request.payload;
         const newPlace = await db.placeStore.addPlace(place);
+        console.log(newPlace)
         if (newPlace) {
           return h.response(newPlace).code(201);
         }
@@ -55,7 +56,7 @@ export const placeApi = {
         if (!place) {
           return Boom.notFound("No PlaceMark with this id");
         }
-        await db.placeStore.deletePlaceById(place._id);
+        await db.placeStore.deletePlaceById(place._id, place.createdBy);
         return h.response().code(204);
       } catch (err) {
         return Boom.serverUnavailable("No PlaceMark with this id");

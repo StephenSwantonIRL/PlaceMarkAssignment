@@ -1,11 +1,11 @@
 import { v4 } from "uuid";
-
+import _ from "lodash"
 
 
 export const placeMemStore = {
   places: [],
   getAllPlaces() {
-    return this.places;
+    return _.clone(this.places);
   },
 
   getUserPlaces(userId) {
@@ -28,7 +28,14 @@ export const placeMemStore = {
   },
 
   async getPlaceById(id) {
-    return this.places.find((place) => place._id === id);
+    let returnedPlace = this.places.find((place) => place._id === id);
+    if (returnedPlace === undefined) {
+      returnedPlace = null;
+    }
+    return returnedPlace;
+
+
+
   },
 
   async updatePlace(id, updatedPlace) {
@@ -44,7 +51,7 @@ export const placeMemStore = {
 
   async deletePlaceById(id, createdBy) {
     const placeInDb = await this.getPlaceById(id);
-    if (placeInDb !== undefined) {
+    if (placeInDb !== null) {
       const placeCreatedBy = placeInDb.createdBy;
       if (placeCreatedBy === createdBy) {
         const index = this.places.findIndex((place) => place._id === id);
