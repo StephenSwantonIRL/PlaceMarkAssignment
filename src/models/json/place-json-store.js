@@ -75,7 +75,7 @@ export const placeJsonStore = {
   },
 
   async deleteAll() {
-    db.data.playlists = [];
+    db.data.places = [];
     await db.write();
   },
 };
