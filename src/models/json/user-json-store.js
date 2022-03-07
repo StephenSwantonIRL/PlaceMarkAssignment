@@ -1,14 +1,17 @@
 import { v4 } from "uuid";
+import { fileURLToPath } from "url"
+import { join, dirname } from "path"
 // eslint-disable-next-line import/no-unresolved
 import { JSONFile, Low } from "lowdb";
 
-const db = new Low(new JSONFile("./src/models/json/users.json"));
-db.data = { users: [] };
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const file = join(__dirname, 'users.json')
+const db = new Low(new JSONFile(file));
+db.data = { users: [] }
 
 export const userJsonStore = {
   async getAllUsers() {
     await db.read();
-    console.log(typeof(db.data.users));
     return db.data.users;
   },
 
@@ -40,7 +43,8 @@ export const userJsonStore = {
   async getUserByEmail(email) {
     await db.read();
     let u = db.data.users.find((user) => user.email === email);
-    if (u === undefined) u = null;
+    if (u === undefined)
+      u = null;
     return u;
   },
 
@@ -79,3 +83,5 @@ export const userJsonStore = {
   },
 
 };
+
+//userJsonStore.getUserByEmail("stephenswanton@gmail.com").then((data) => console.log(data))

@@ -8,6 +8,7 @@ import { db } from "../../src/models/db.js";
 
 suite("User API tests", () => {
   setup(async () => {
+    db.init("mem");
     await placeMarkService.deleteAllUsers();
     for (let i = 0; i < testUsers.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
@@ -21,13 +22,13 @@ suite("User API tests", () => {
     assert.isDefined(newUser._id);
   });
 
-  // test("delete all userApi", async () => {
-  //   let returnedUsers = await placeMarkService.getAllUsers();
-  //   assert.equal(returnedUsers.length, 3);
-  //   await placeMarkService.deleteAllUsers();
-  //   returnedUsers = await placeMarkService.getAllUsers();
-  //   assert.equal(returnedUsers.length, 0);
-  // });
+  test("delete all userApi", async () => {
+    let returnedUsers = await placeMarkService.getAllUsers();
+    assert.equal(returnedUsers.length, 3);
+    await placeMarkService.deleteAllUsers();
+    returnedUsers = await placeMarkService.getAllUsers();
+    assert.equal(returnedUsers.length, 0);
+  });
 
   test("get a user", async () => {
     const returnedUser = await placeMarkService.getUser(testUsers[0]._id);

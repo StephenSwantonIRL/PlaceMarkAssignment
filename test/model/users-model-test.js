@@ -10,7 +10,7 @@ chai.use(chaiAsPromised);
 
 suite("User Model tests", () => {
   setup(async () => {
-    db.init("json");
+    db.init("mem");
     await db.userStore.deleteAll();
     for (let i = 0; i < testUsers.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
