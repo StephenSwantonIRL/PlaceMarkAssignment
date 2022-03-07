@@ -1,5 +1,6 @@
 import { assert } from "chai";
 import { placeMarkService } from "./placemark-service.js";
+import { db } from "../../src/models/db.js"
 import { assertSubset } from "../test-utils.js";
 
 import { longplayer, svalbard, incompleteSvalbard, updatedSvalbard, sealIsland } from "../fixtures.js";
@@ -9,8 +10,9 @@ suite("PlaceMark API tests", () => {
   let user = null;
 
   setup(async () => {
-     await placeMarkService.deleteAllPlaces();
-     svalbard.createdBy = 2234347347;
+    db.init("mem");
+     //await placeMarkService.deleteAllPlaces();
+     //svalbard.createdBy = 2234347347;
   });
 
   teardown(async () => {});
@@ -19,6 +21,7 @@ suite("PlaceMark API tests", () => {
     const returnedPlace = await placeMarkService.createPlace(svalbard);
     assert.isNotNull(returnedPlace);
     assertSubset(svalbard, returnedPlace);
+
   });
 
   test("return a place", async () => {
@@ -39,7 +42,7 @@ suite("PlaceMark API tests", () => {
 
   test("delete a place", async () => {
     const place = await placeMarkService.createPlace(svalbard);
-    const response = await placeMarkService.deletePlace(place._id);
+    const response = await placeMarkService.deletePlace(place._id, place.createdBy);
     assert.equal(response.status, 204);
     try {
       const returnedPlace = await placeMarkService.getPlace(place._id);

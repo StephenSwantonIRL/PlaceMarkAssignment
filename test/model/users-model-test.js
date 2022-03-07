@@ -15,11 +15,22 @@ suite("User Model tests", () => {
     for (let i = 0; i < testUsers.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
       testUsers[i] = await db.userStore.addUser(testUsers[i]);
+      console.log(testUsers[i])
     }
   });
 
+  test("get all users ", async () => {
+    const returnedUsers = await db.userStore.getAllUsers();
+    console.log(returnedUsers);
+    assert.equal(returnedUsers.length, 3);
+  });
+
+
+
   test("create a user - successful ", async () => {
+    await db.userStore.deleteAll();
     const newUser = await db.userStore.addUser(maggie);
+    console.log(newUser)
     assertSubset(maggie, newUser);
   });
 
@@ -52,16 +63,16 @@ suite("User Model tests", () => {
 
   test("delete One User - success", async () => {
     await db.userStore.deleteUserById(testUsers[0]._id);
-    const returnedUsers = await _.clone(db.userStore.getAllUsers());
+    const returnedUsers = await db.userStore.getAllUsers();
     assert.equal(returnedUsers.length, testUsers.length - 1);
     const deletedUser = await db.userStore.getUserById(testUsers[0]._id);
-    assert.isUndefined(deletedUser);
+    assert.isNull(deletedUser);
   });
 
   test("get a user - bad params", async () => {
-    assert.isUndefined(await db.userStore.getUserByEmail(""));
-    assert.isUndefined(await db.userStore.getUserById(""));
-    assert.isUndefined(await db.userStore.getUserById());
+    assert.isNull(await db.userStore.getUserByEmail(""));
+    assert.isNull(await db.userStore.getUserById(""));
+    assert.isNull(await db.userStore.getUserById());
   });
 
   test("delete One User - fail", async () => {
@@ -87,6 +98,7 @@ suite("User Model tests", () => {
     const updatedUser = updatedMaggie;
     updatedUser.email = "bart@simpson2.com";
     updatedUser._id = user._id;
-    await expect(db.userStore.updateUser(user._id, updatedUser)).to.be.rejectedWith("Another user is already using that email address");
+    const outcome = await expect(db.userStore.updateUser(user._id, updatedUser)).to.be.rejectedWith("Another user is already using that email address");
+    console.log(outcome)
   });
 });

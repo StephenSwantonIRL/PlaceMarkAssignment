@@ -53,7 +53,6 @@ export const accountsController = {
     handler: async function (request, h) {
       const { email, password } = request.payload;
       console.log(email);
-      await console.log(db.userStore.getAllUsers());
       const user = await db.userStore.getUserByEmail(email);
       console.log(user);
       if (!user || user.password !== password) {
