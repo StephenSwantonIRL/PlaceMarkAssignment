@@ -1,5 +1,12 @@
 import Boom from "@hapi/boom";
 import { db } from "../src/models/db.js";
+import {
+  PlaceArray,
+  PlaceSpecAPI,
+  PlaceSpecPlus,
+  IdSpec,
+} from "../src/models/joi-schemas.js";
+import { validationError} from "./logger.js";
 
 export const placeApi = {
   find: {
@@ -11,7 +18,12 @@ export const placeApi = {
       } catch (err) {
         return Boom.serverUnavailable("Database Error");
       }
+
     },
+    tags: ["api"],
+    description: "Get all Places",
+    notes: "Returns details of all Places",
+    response: { schema: PlaceArray, failAction: validationError }
   },
 
   findOne: {
@@ -27,6 +39,11 @@ export const placeApi = {
         return Boom.serverUnavailable("No PlaceMark with this id");
       }
     },
+    tags: ["api"],
+    description: "Gets details related to a Place",
+    notes: "Returns details of a Place based on the ID provided",
+    validate: { params: { id: IdSpec }, failAction: validationError },
+    response: { schema: PlaceSpecPlus, failAction: validationError }
   },
 
   create: {
@@ -44,6 +61,11 @@ export const placeApi = {
         return Boom.serverUnavailable("Database Error");
       }
     },
+    tags: ["api"],
+    description: "Creates a new Place",
+    notes: "Adds a new place to the database",
+    validate: { payload: PlaceSpecAPI, failAction: validationError },
+    response: { schema: PlaceSpecPlus, failAction: validationError }
   },
 
   deleteOne: {
@@ -62,6 +84,10 @@ export const placeApi = {
         return Boom.serverUnavailable("No PlaceMark with this id");
       }
     },
+    tags: ["api"],
+    description: "Deletes a place. ",
+    notes: "Deletes a place based on the place ID provided and creating user id provided",
+    validate: { params: { id: IdSpec }, failAction: validationError },
   },
 
   deleteAll: {
@@ -74,6 +100,9 @@ export const placeApi = {
         return Boom.serverUnavailable("Database Error");
       }
     },
+    tags: ["api"],
+    description: "Deletes all places. ",
+    notes: "Deletes all places from the database",
   },
   
   

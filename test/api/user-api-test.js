@@ -5,14 +5,15 @@ import { placeMarkService } from "./placemark-service.js";
 import { maggie, testUsers } from "../fixtures.js";
 import { db } from "../../src/models/db.js";
 
+const users = new Array(testUsers.length);
 
 suite("User API tests", () => {
   setup(async () => {
-    db.init("mem");
+    db.init("json");
     await placeMarkService.deleteAllUsers();
     for (let i = 0; i < testUsers.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
-      testUsers[i] = await placeMarkService.createUser(testUsers[i]);
+      users[i] = await placeMarkService.createUser(testUsers[i]);
     }
   });
 
@@ -31,8 +32,8 @@ suite("User API tests", () => {
   });
 
   test("get a user", async () => {
-    const returnedUser = await placeMarkService.getUser(testUsers[0]._id);
-    assert.deepEqual(testUsers[0], returnedUser);
+    const returnedUser = await placeMarkService.getUser(users[0]._id);
+    assert.deepEqual(users[0], returnedUser);
   });
 
   test("get a user - bad id", async () => {
