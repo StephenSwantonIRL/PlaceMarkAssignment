@@ -98,3 +98,19 @@ export const sealIsland = {
   description: "<p>In False Bay—named in the 17th century by the disgruntled sailors who mistook it for adjacent Table Bay—lies a rocky strip of land overrun with seals. Around 60,000 of the barking, flopping, waddling brown fur seals jostle for space on the half-mile-long, 164-foot-wide (50 m) Seal Island.</p><p>From a tour boat, the cacophonous jostling is a compelling sight, but it’s the overwhelming smell—a unique bouquet of rotting fish and excrement—that makes the boldest impression. This, however, is before you view the effects of the “ring of death,” a circle of great white sharks that surrounds the island waiting for seals to enter the water. When they do, the sharks pursue them relentlessly.</p><p>It’s not unusual to see a great white suddenly breach the surface and hurtle into the air with a seal struggling in its jaws. The sharks are fast, brutal, and capable of chomping seals to death in under a minute. It’s a violent sight, and you can’t help but root for the seal. Sometimes, after a thrilling battle, they get away.</p>",
   createdBy: "1223355634"
 }
+
+export const isolatedPlaces = {
+  name: "Isolated Places",
+  places: [],
+}
+
+export const updatedIsolatedPlaces = {
+  name: "Isolated Islands",
+  places: [],
+}
+
+
+export const blankCategory = {
+  name: "",
+  places: [],
+}
