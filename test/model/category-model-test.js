@@ -97,6 +97,18 @@ suite("Category Model tests", () => {
     assertSubset(svalbard, categoryPlacesPost);
   });
 
+  test("delete a place from a category", async () => {
+    const newCategory = await db.categoryStore.addCategory(isolatedPlaces);
+    await db.categoryStore.addPlace(svalbard._id, newCategory._id);
+    await db.categoryStore.addPlace(sealIsland._id, newCategory._id);
+    const categoryPlacesPre = await db.categoryStore.getPlaces(newCategory._id);
+    assertSubset(svalbard, categoryPlacesPre);
+    assertSubset(sealIsland, categoryPlacesPre)
+    await db.categoryStore.deletePlace(svalbard._id, newCategory._id);
+    const categoryPlacesPost = await db.categoryStore.getPlaces(newCategory._id);
+    assert.isFalse(assertSubset(svalbard));
+  });
+
 
 
 });
