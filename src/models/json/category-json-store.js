@@ -1,35 +1,47 @@
 /* eslint-disable no-else-return */
 import { v4 } from "uuid";
-import _ from "lodash";
-import { placeMemStore } from "./place-mem-store.js";
+import { fileURLToPath } from "url";
+import { join, dirname } from "path";
+// eslint-disable-next-line import/no-unresolved
+import { JSONFile, Low } from "lowdb";
+import { placeJsonStore } from "./place-json-store.js";
 
-export const categoryMemStore = {
-  categories: [],
-  getAllCategories() {
-    return _.clone(this.categories);
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const file = join(__dirname, "categories.json");
+const db = new Low(new JSONFile(file));
+db.data = { categories: [] };
+
+export const categoryJsonStore = {
+  async getAllCategories() {
+    await db.read();
+    return db.data.categories;
   },
 
   async addCategory(category) {
+    await db.read();
     if (!category.name) {
       return new Error("Incomplete Category Information");
     } else {
       category._id = v4();
       category.places = [];
-      this.categories.push(category);
+      db.data.categories.push(category);
+      await db.write();
       return category;
     }
   },
 
   async addPlace(placeId, categoryId) {
+    await db.read();
     if (!placeId || !categoryId) {
       return new Error("Incomplete information provided");
     } else {
       const category = await this.getCategoryById(categoryId);
-      const place = await placeMemStore.getPlaceById(placeId);
+      const place = await placeJsonStore.getPlaceById(placeId);
       if (category === null || place === null) {
         return new Error("Unable to find Category or Place");
       } else {
         category.places.push(placeId);
+        await db.write();
         return category;
       }
     }
@@ -39,55 +51,64 @@ export const categoryMemStore = {
     if (!placeId || !categoryId) {
       return new Error("Incomplete information provided");
     } else {
+      await db.read();
       const category = await this.getCategoryById(categoryId);
       if (category === null) {
         return new Error("Unable to find Category");
       } else {
         const index = category.places.findIndex((place) => place === placeId);
         category.places.splice(index, 1);
+        db.write();
         return category;
       }
     }
   },
 
   async getPlaces(categoryId) {
+    await db.read();
     const category = await this.getCategoryById(categoryId);
-    const p = [];
+    const places = [];
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < category.places.length; i++) {
       // eslint-disable-next-line no-await-in-loop
-      let pl = await placeMemStore.getPlaceById(category.places[i]);
-      p.push(pl);
+      let returnedPlace = await placeJsonStore.getPlaceById(category.places[i]);
+      places.push(returnedPlace);
     }
-    return p;
+    return places;
   },
 
   async getCategoryById(id) {
-    let returnedCategory = this.categories.find((category) => category._id === id);
+    await db.read();
+    let returnedCategory = db.data.categories.find((category) => category._id === id);
     if (returnedCategory === undefined) {
       returnedCategory = null;
     }
     return returnedCategory;
   },
 
-  async updateCategory(id, updatedCategory) {
-    let category = await this.getCategoryById(id);
-    category.name = updatedCategory.name;
-    return category;
-  },
-
   async deleteCategoryById(id, isAdmin) {
     const categoryInDb = await this.getCategoryById(id);
     if (categoryInDb !== null && isAdmin === true) {
-      const index = this.categories.findIndex((category) => category._id === id);
-      this.categories.splice(index, 1);
+      await db.read();
+      const index = db.data.categories.findIndex((category) => category._id === id);
+      if (index !== -1) db.data.categories.splice(index, 1);
+      await db.write();
       return Promise.resolve();
     } else {
       return new Error("Unable to complete request. Please ensure valid Category Id and Administrator");
     }
   },
 
+  async updateCategory(id, updatedCategory) {
+    await db.read();
+    const category = await this.getCategoryById(id);
+    category.name = updatedCategory.name;
+    await db.write();
+    return category;
+  },
+
   async deleteAll() {
-    this.categories = [];
+    db.data.categories = [];
+    await db.write();
   },
 };
