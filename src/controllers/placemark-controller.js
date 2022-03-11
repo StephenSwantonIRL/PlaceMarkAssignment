@@ -33,12 +33,12 @@ export const placeController = {
       }
       const categories = JSON.parse(request.payload.categories);
 
-      for (let i=0; i < categories.length; i++ ){
+      for (let i=0; i < categories.length; i+=1 ){
         let category = await db.categoryStore.getCategoryByName(categories[i].value);
-        console.log(category._id);
         await db.categoryStore.addPlace(addPlace._id, category._id);
       }
       return h.redirect("/dashboard");
     },
   },
+  
 };
