@@ -7,7 +7,7 @@ import { svalbard, sealIsland, isolatedPlaces } from "../fixtures.js";
 
 suite("Category API tests", () => {
   setup(async () => {
-    db.init("json");
+    db.init("mem");
     await placeMarkService.deleteAllCategories();
   });
 
@@ -58,7 +58,7 @@ suite("Category API tests", () => {
   test("get places in a category", async () => {
     const createdCategory = await placeMarkService.createCategory(isolatedPlaces);
     const places = [];
-    assert.equal(createdCategory.places, places);
+    assert.deepEqual(createdCategory.places, places);
     const placeOne = await placeMarkService.createPlace(svalbard);
     const placeTwo = await placeMarkService.createPlace(sealIsland);
     await placeMarkService.addPlaceToCategory(placeOne._id, createdCategory._id);
@@ -76,7 +76,7 @@ suite("Category API tests", () => {
     await placeMarkService.addPlaceToCategory(placeOne._id, createdCategory._id);
     await placeMarkService.addPlaceToCategory(placeTwo._id, createdCategory._id);
     const returnedPlacesPre = await placeMarkService.getPlacesInCategory(createdCategory._id);
-    assert.equal(returnedPlacePre.length, 2);
+    assert.equal(returnedPlacesPre.length, 2);
     assertSubset(svalbard, returnedPlacesPre);
     await placeMarkService.deletePlaceFromCategory(placeOne._id, createdCategory._id);
     const returnedPlacesPost = await placeMarkService.getPlacesInCategory(createdCategory._id);

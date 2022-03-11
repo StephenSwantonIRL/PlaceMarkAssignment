@@ -86,7 +86,7 @@ export const placeMarkService = {
   },
 
   async addPlaceToCategory(placeId, categoryId) {
-    const res = await axios.post(`${this.placeMarkUrl}/api/placemark/category/${categoryId}/places`, placeId);
+    const res = await axios.post(`${this.placeMarkUrl}/api/placemark/category/${categoryId}/places`, { "placeId": placeId });
     return res.data;
   },
 

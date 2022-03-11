@@ -25,6 +25,14 @@ export const PlaceSpec = Joi.object()
     })
     .label("PlaceDetails");
 
+export const CategorySpec = Joi.object()
+  .keys({
+    name: Joi.string().example("Isolated Places").required(),
+    places: Joi.array().items(Joi.string()).optional(),
+  })
+  .label("CategoryDetails")
+
+
 export const IdSpec = Joi.alternatives().try(Joi.string(), Joi.object()).description("a valid ID");
 
 export const PlaceSpecAPI = PlaceSpec.keys({
@@ -42,5 +50,22 @@ export const PlaceSpecPlus = PlaceSpecAPI.keys({
   __v: Joi.number(),
 }).label("PlaceDetailsPlus");
 
+export const CategorySpecPlus = CategorySpec.keys({
+  _id: IdSpec,
+  __v: Joi.number(),
+}).label("CategoryDetailsPlus");
+
+export const PlaceIdSpec = Joi.object()
+  .keys({
+    placeId: IdSpec,
+  })
+
+export const CategoryIdSpec = Joi.object()
+  .keys({
+    categoryId: IdSpec,
+  })
+
+
 export const UserArray = Joi.array().items(UserSpecPlus).label("UserArray");
 export const PlaceArray = Joi.array().items(PlaceSpecPlus).label("PlaceArray");
+export const CategoryArray = Joi.array().items(CategorySpecPlus).label("CategoryArray")
