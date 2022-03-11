@@ -2,8 +2,6 @@ import { aboutController } from "./controllers/about-controller.js";
 import { accountsController } from "./controllers/accounts-controller.js";
 import { dashboardController } from "./controllers/dashboard-controller.js";
 import { placeController } from "./controllers/placemark-controller.js";
-import { placeApi } from "../api/place-api.js";
-
 
 export const webRoutes = [
   { method: "GET", path: "/", config: accountsController.index },
@@ -22,5 +20,4 @@ export const webRoutes = [
 
   { method: "GET", path: "/dashboard", config: dashboardController.index },
   { method: "GET", path: "/{param*}", handler: { directory: { path: "../public" } }, options: { auth: false } }
-
 ];

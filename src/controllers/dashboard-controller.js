@@ -11,8 +11,6 @@ export const dashboardController = {
       console.log(userId)
       const myPlaceMarks = await db.placeStore.getUserPlaces(userId);
       const othersPlaceMarks = await db.placeStore.getOtherUserPlaces(userId);
-      console.log("Others Place Marks")
-      console.log(othersPlaceMarks)
       const viewData = {
         title: "Playtime Dashboard",
         user: loggedInUser,

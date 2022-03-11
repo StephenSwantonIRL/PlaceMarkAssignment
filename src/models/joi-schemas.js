@@ -39,6 +39,10 @@ export const PlaceSpecAPI = PlaceSpec.keys({
   createdBy: IdSpec
 }).label("PlaceSpecAPI");
 
+export const PlaceSpecWithCategory = PlaceSpec.keys({
+  categories: Joi.string()
+}).label("PlaceSpecAPI");
+
 export const UserSpecPlus = UserSpec.keys({
   _id: IdSpec,
   __v: Joi.number(),

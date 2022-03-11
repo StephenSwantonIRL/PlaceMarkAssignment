@@ -86,6 +86,16 @@ export const categoryJsonStore = {
     return returnedCategory;
   },
 
+  async getCategoryByName(name) {
+    await db.read();
+    let returnedCategory = db.data.categories.find((category) => category.name === name);
+    if (returnedCategory === undefined) {
+      returnedCategory = null;
+    }
+    return returnedCategory;
+  },
+
+
   async deleteCategoryById(id, isAdmin) {
     const categoryInDb = await this.getCategoryById(id);
     if (categoryInDb !== null && isAdmin === true) {
