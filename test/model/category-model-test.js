@@ -1,13 +1,13 @@
 import { assert } from "chai";
 import { db } from "../../src/models/db.js";
-import { svalbard, sealIsland, isolatedPlaces, updatedIsolatedPlaces, blankCategory } from "../fixtures.js";
+import { svalbard, sealIsland, isolatedPlaces, updatedIsolatedPlaces, blankCategory, maggie } from "../fixtures.js";
 import { assertSubset, assertObjectinArray } from "../test-utils.js";
-import _ from 'lodash';
+
 
 suite("Category Model tests", () => {
 
   setup(async () => {
-    db.init("mem");
+    db.init("json");
     await db.categoryStore.deleteAll();
     await db.placeStore.deleteAll();
     const svalbardInDb = await db.placeStore.addPlace(svalbard);
@@ -109,6 +109,12 @@ suite("Category Model tests", () => {
     assert.isFalse(assertSubset(svalbard));
   });
 
-
+  test("get a category - success", async () => {
+    const category = await db.categoryStore.addCategory(isolatedPlaces);
+    const returnedCategory1 = await db.categoryStore.getCategoryById(category._id);
+    assert.deepEqual(category, returnedCategory1);
+    const returnedCategory2 = await db.categoryStore.getCategoryByName(category.name);
+    assert.deepEqual(category, returnedCategory2);
+  });
 
 });
