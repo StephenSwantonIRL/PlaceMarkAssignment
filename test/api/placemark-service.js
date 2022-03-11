@@ -49,5 +49,49 @@ export const placeMarkService = {
     const res = await axios.get(`${this.placeMarkUrl}/api/placemark/${id}`);
     return res.data;
   },
+
+  async createCategory(category) {
+    const res = await axios.post(`${this.placeMarkUrl}/api/placemark/category`, category);
+    return res.data;
+  },
+
+  async deleteAllCategories() {
+    const response = await axios.delete(`${this.placeMarkUrl}/api/placemark/category`);
+    return response.data;
+  },
+
+  async deleteCategory(id) {
+    const response = await axios.delete(`${this.placeMarkUrl}/api/placemark/category/${id}`);
+    return response;
+  },
+
+  async deletePlaceFromCategory(placeId, categoryId) {
+    const response = await axios.delete(`${this.placeMarkUrl}/api/placemark/category/${categoryId}/places/${placeId}`);
+    return response;
+  },
+
+  async getAllCategories() {
+    const res = await axios.get(`${this.placeMarkUrl}/api/placemark/category`);
+    return res.data;
+  },
+
+  async getCategory(id) {
+    const res = await axios.get(`${this.placeMarkUrl}/api/placemark/category/${id}`);
+    return res.data;
+  },
+
+  async getPlacesInCategory(id) {
+    const res = await axios.get(`${this.placeMarkUrl}/api/placemark/category/${id}/places`);
+    return res.data;
+  },
+
+  async addPlaceToCategory(placeId, categoryId) {
+    const res = await axios.post(`${this.placeMarkUrl}/api/placemark/category/${categoryId}/places`, placeId);
+    return res.data;
+  },
+
+
+
 };
+
 
