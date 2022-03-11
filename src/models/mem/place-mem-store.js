@@ -20,10 +20,18 @@ export const placeMemStore = {
   async addPlace(place) {
     if (!place.name || !place.location || !place.latitude || !place.longitude || !place.createdBy) {
       return new Error("Incomplete Place Information");
-    } else  {
-      place._id = v4();
-      this.places.push(place);
-      return place;
+    } else {
+      const newPlace = {};
+      newPlace._id = v4();
+      newPlace.name = place.name;
+      newPlace.location = place.location;
+      newPlace.latitude = place.latitude;
+      newPlace.longitude = place.longitude;
+      newPlace.description = place.description;
+      newPlace.images = place.images;
+      newPlace.createdBy = place.createdBy;
+      this.places.push(newPlace);
+      return newPlace;
     }
   },
 

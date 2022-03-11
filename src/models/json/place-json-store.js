@@ -19,12 +19,18 @@ export const placeJsonStore = {
 
   async addPlace(place) {
     await db.read();
-    console.log("running")
-    place._id = v4();
-    db.data.places.push(place);
+    const newPlace = {};
+    newPlace.name = place.name;
+    newPlace.location = place.location;
+    newPlace.latitude = place.latitude;
+    newPlace.longitude = place.longitude;
+    newPlace.description = place.description;
+    newPlace.images = place.images;
+    newPlace.createdBy = place.createdBy;
+    newPlace._id = v4();
+    db.data.places.push(newPlace);
     await db.write();
-    console.log(place._id)
-    return place;
+    return newPlace;
   },
 
   async getPlaceById(id) {
