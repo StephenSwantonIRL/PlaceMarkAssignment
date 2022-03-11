@@ -20,5 +20,6 @@ export const webRoutes = [
 
   { method: "GET", path: "/dashboard", config: dashboardController.index },
   { method: "POST", path: "/addCategory", config: dashboardController.addCategory },
+  { method: "GET", path: "/deleteCategory/{id}", config: dashboardController.deleteCategory },
   { method: "GET", path: "/{param*}", handler: { directory: { path: "../public" } }, options: { auth: false } }
 ];

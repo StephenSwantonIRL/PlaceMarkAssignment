@@ -1,0 +1,19 @@
+<section class="section">
+  <h2 class="title is-4">All Categories</h2>
+  <table class="table" style="width: 100%">
+    <thead>
+    <th>Name</th>
+    <th></th>
+    </thead>
+    <tbody>
+    {{# each categories}}
+      <tr>
+        <td>{{name}}</td>
+        <td><a class="button is-small" href="/deleteCategory/{{_id}}">
+          Delete
+        </a></td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+</section>
