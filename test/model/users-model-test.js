@@ -10,7 +10,7 @@ chai.use(chaiAsPromised);
 
 suite("User Model tests", () => {
   setup(async () => {
-    db.init("json");
+    db.init("mongo");
     await db.userStore.deleteAll();
     for (let i = 0; i < testUsers.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
@@ -82,13 +82,13 @@ suite("User Model tests", () => {
   test("update a user - success", async () => {
     const user = await db.userStore.addUser(maggie);
     maggie._id = user._id;
-    assert.deepEqual(user, maggie);
+    assertSubset(maggie, user);
     const updatedUser = updatedMaggie;
     updatedUser._id = user._id;
     updatedUser.isAdmin = false;
     await db.userStore.updateUser(user._id, updatedUser);
     const finalUser = await db.userStore.getUserById(user._id);
-    assert.deepEqual(finalUser, updatedUser);
+    assertSubset(updatedUser, finalUser);
   });
 
   test("update a user - fail - another user with same email", async () => {
@@ -103,11 +103,11 @@ suite("User Model tests", () => {
 
   test("check if administrator", async () => {
     const newAdmin = await db.userStore.addUser(maggie);
-    await db.userStore.makeAdmin(newAdmin._id);
-    const adminStatus = await db.userStore.checkAdmin(maggie._id);
+    const outcome = await db.userStore.makeAdmin(newAdmin._id);
+    const adminStatus = await db.userStore.checkAdmin(newAdmin._id);
     assert.equal(adminStatus, true);
     await db.userStore.revokeAdmin(newAdmin._id);
-    const revokedStatus = await db.userStore.checkAdmin(maggie._id);
+    const revokedStatus = await db.userStore.checkAdmin(newAdmin._id);
     assert.equal(revokedStatus, false);
   });
 });
