@@ -14,6 +14,26 @@ export const placeController = {
       return h.view("create-place-view", { title: "Create a New PlaceMark", categories: categories });
     },
   },
+  edit: {
+    auth: false,
+    handler: async function (request, h) {
+      const place = await db.placeStore.getPlaceById(request.params.id);
+      const categories = await db.categoryStore.getCategoriesByPlace(place._id);
+      const categorylist = await db.categoryStore.getAllCategories();
+      if (categories.length > 0) {
+        let placeCategories = "";
+        for (let i = 0; i < categories.length; i += 1) {
+          placeCategories = placeCategories.concat(categories[i].name);
+          if (i < categories.length - 1) {
+            placeCategories = placeCategories.concat(", ");
+          }
+        }
+        place.categories = placeCategories;
+      }
+
+      return h.view("edit-place-view", { title: "Editing", place: place, "categories": categorylist });
+    },
+  },
   save: {
     validate: {
       payload: PlaceSpecWithCategory,
@@ -33,12 +53,11 @@ export const placeController = {
       }
       const categories = JSON.parse(request.payload.categories);
 
-      for (let i=0; i < categories.length; i+=1 ){
-        let category = await db.categoryStore.getCategoryByName(categories[i].value);
+      for (let i = 0; i < categories.length; i += 1) {
+        const category = await db.categoryStore.getCategoryByName(categories[i].value);
         await db.categoryStore.addPlace(addPlace._id, category._id);
       }
       return h.redirect("/dashboard");
     },
   },
-  
 };

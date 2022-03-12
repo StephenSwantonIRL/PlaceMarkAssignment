@@ -22,9 +22,14 @@
         <td>{{location}}</td>
         <td>{{latitude}}</td>
         <td>{{longitude}}</td>
-        <td><button onclick="openModal('{{_id}}')">
+        <td><button class="button is-small" onclick="openModal('{{_id}}')">
           View
-        </button></td>
+        </button> <a class="button is-small" href="/editPlace/{{_id}}">
+          Edit
+        </a> <a class="button is-small" href="/deletePlace/{{_id}}">
+          Delete
+        </a>
+        </td>
       </tr>
       {{/each}}
     </tbody>
@@ -47,7 +52,7 @@
         <td>{{location}}</td>
         <td>{{latitude}}</td>
         <td>{{longitude}}</td>
-        <td><button onclick="openModal('{{_id}}')">
+        <td><button class="button is-small" onclick="openModal('{{_id}}')">
           View
         </button></td>
       </tr>
@@ -89,8 +94,8 @@
           let categories = ""
           for (let i = 0; i < placeMark.categories.length; i += 1) {
             categories = categories.concat(placeMark.categories[i].name)
-            if( i < (categories.length-1)){
-              categories.concat(", ")
+            if( i < (placeMark.categories.length-1)){
+              categories = categories.concat(", ")
             }
           }
           document.getElementById('placeMarkCategories').innerHTML = "<strong>Categories:</strong> " + categories;
