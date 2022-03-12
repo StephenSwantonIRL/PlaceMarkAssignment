@@ -85,6 +85,7 @@ suite("User Model tests", () => {
     assert.deepEqual(user, maggie);
     const updatedUser = updatedMaggie;
     updatedUser._id = user._id;
+    updatedUser.isAdmin = false;
     await db.userStore.updateUser(user._id, updatedUser);
     const finalUser = await db.userStore.getUserById(user._id);
     assert.deepEqual(finalUser, updatedUser);
