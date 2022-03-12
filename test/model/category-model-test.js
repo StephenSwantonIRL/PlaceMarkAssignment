@@ -1,11 +1,9 @@
 import { assert } from "chai";
 import { db } from "../../src/models/db.js";
-import { svalbard, sealIsland, isolatedPlaces, updatedIsolatedPlaces, blankCategory, maggie } from "../fixtures.js";
+import { svalbard, sealIsland, isolatedPlaces, updatedIsolatedPlaces, blankCategory, curiousContraptions } from "../fixtures.js";
 import { assertSubset, assertObjectinArray } from "../test-utils.js";
 
-
 suite("Category Model tests", () => {
-
   setup(async () => {
     db.init("json");
     await db.categoryStore.deleteAll();
@@ -17,25 +15,25 @@ suite("Category Model tests", () => {
   });
 
   test("create a category", async () => {
-    const allCategoriesPre =  await db.categoryStore.getAllCategories();
+    const allCategoriesPre = await db.categoryStore.getAllCategories();
     assert.isFalse(assertSubset(isolatedPlaces, allCategoriesPre));
     const newCategory = await db.categoryStore.addCategory(isolatedPlaces);
     const allCategoriesPost = await db.categoryStore.getAllCategories();
     assertSubset(isolatedPlaces, allCategoriesPost);
-    assert.notEqual(allCategoriesPre, allCategoriesPost)
-    assert.equal(allCategoriesPost.length, allCategoriesPre + 1)
+    assert.notEqual(allCategoriesPre, allCategoriesPost);
+    assert.equal(allCategoriesPost.length, allCategoriesPre + 1);
   });
 
   test("create a category - failed - no name ", async () => {
     await db.categoryStore.addCategory(blankCategory);
     const allCategories = await db.categoryStore.getAllCategories();
-    assert.isFalse(allCategories.includes(blankCategory))
+    assert.isFalse(allCategories.includes(blankCategory));
   });
 
   test("delete a category - fail - bad id ", async () => {
     const allCategoriesPre = await db.categoryStore.getAllCategories();
     const adminUser = true;
-    await db.categoryStore.deleteCategoryById("bad-id", adminUser );
+    await db.categoryStore.deleteCategoryById("bad-id", adminUser);
     const allCategoriesPost = await db.categoryStore.getAllCategories();
     assert.equal(allCategoriesPre.length, allCategoriesPost.length);
   });
@@ -43,13 +41,12 @@ suite("Category Model tests", () => {
   test("delete a category - fail - not an admin", async () => {
     const categoryToDelete = await db.categoryStore.addCategory(isolatedPlaces);
     const categoryId = categoryToDelete._id;
-    const allCategoriesPre =  await db.categoryStore.getAllCategories();
+    const allCategoriesPre = await db.categoryStore.getAllCategories();
     const adminUser = false;
     await db.categoryStore.deleteCategoryById(categoryId, adminUser);
     const allCategoriesPost = await db.categoryStore.getAllCategories();
     assert.equal(allCategoriesPre.length, allCategoriesPost.length);
-    const assertion = assertSubset( categoryToDelete, allCategoriesPost);
-
+    const assertion = assertSubset(categoryToDelete, allCategoriesPost);
   });
 
   test("delete a category - success ", async () => {
@@ -74,24 +71,22 @@ suite("Category Model tests", () => {
     const finalCategory = await db.categoryStore.getCategoryById(category._id);
     const finalCategories = await db.categoryStore.getAllCategories();
     assert.deepEqual(finalCategory, updatedCategory);
-    assert.equal(allCategories.length, finalCategories.length)
+    assert.equal(allCategories.length, finalCategories.length);
   });
-
 
   test("get places in a category", async () => {
     const newCategory = await db.categoryStore.addCategory(isolatedPlaces);
     await db.categoryStore.addPlace(svalbard._id, newCategory._id);
     await db.categoryStore.addPlace(sealIsland._id, newCategory._id);
-    const places =await db.categoryStore.getPlaces(isolatedPlaces._id);
+    const places = await db.categoryStore.getPlaces(isolatedPlaces._id);
     assertSubset(svalbard, places);
     assertSubset(sealIsland, places);
-
   });
 
   test("add a place to a category", async () => {
     const newCategory = await db.categoryStore.addCategory(isolatedPlaces);
-    const categoryPlacesPre = await db.categoryStore.getPlaces(newCategory._id)
-    assert.isFalse(assertSubset(svalbard,categoryPlacesPre));
+    const categoryPlacesPre = await db.categoryStore.getPlaces(newCategory._id);
+    assert.isFalse(assertSubset(svalbard, categoryPlacesPre));
     await db.categoryStore.addPlace(svalbard._id, newCategory._id);
     const categoryPlacesPost = await db.categoryStore.getPlaces(newCategory._id);
     assertSubset(svalbard, categoryPlacesPost);
@@ -103,7 +98,7 @@ suite("Category Model tests", () => {
     await db.categoryStore.addPlace(sealIsland._id, newCategory._id);
     const categoryPlacesPre = await db.categoryStore.getPlaces(newCategory._id);
     assertSubset(svalbard, categoryPlacesPre);
-    assertSubset(sealIsland, categoryPlacesPre)
+    assertSubset(sealIsland, categoryPlacesPre);
     await db.categoryStore.deletePlace(svalbard._id, newCategory._id);
     const categoryPlacesPost = await db.categoryStore.getPlaces(newCategory._id);
     assert.isFalse(assertSubset(svalbard));
@@ -117,4 +112,15 @@ suite("Category Model tests", () => {
     assert.deepEqual(category, returnedCategory2);
   });
 
+  test("get a categories a place is tagged with - success", async () => {
+    const categoryOne = await db.categoryStore.addCategory(isolatedPlaces);
+    const categoryTwo = await db.categoryStore.addCategory(curiousContraptions);
+    await db.categoryStore.addPlace(svalbard._id, categoryOne._id);
+    await db.categoryStore.addPlace(svalbard._id, categoryTwo._id);
+    const categories = await db.categoryStore.getCategoriesByPlace(svalbard._id);
+    assert.deepEqual(categories, [
+      { name: categoryOne.name, _id: categoryOne._id },
+      { name: categoryTwo.name, _id: categoryTwo._id },
+    ]);
+  });
 });

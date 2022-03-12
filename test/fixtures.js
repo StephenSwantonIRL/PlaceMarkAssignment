@@ -109,6 +109,10 @@ export const updatedIsolatedPlaces = {
   places: [],
 }
 
+export const curiousContraptions = {
+  name: "Curious Contraptions",
+  places: [],
+}
 
 export const blankCategory = {
   name: "",
