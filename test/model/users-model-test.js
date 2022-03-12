@@ -1,5 +1,5 @@
-import { assert, expect } from "chai";
-import chai from "chai";
+import chai, { assert, expect } from "chai";
+
 import chaiAsPromised from "chai-as-promised";
 import _ from "lodash";
 import { db } from "../../src/models/db.js";
@@ -10,12 +10,11 @@ chai.use(chaiAsPromised);
 
 suite("User Model tests", () => {
   setup(async () => {
-    db.init("mem");
+    db.init("json");
     await db.userStore.deleteAll();
     for (let i = 0; i < testUsers.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
       testUsers[i] = await db.userStore.addUser(testUsers[i]);
-      console.log(testUsers[i])
     }
   });
 
@@ -25,12 +24,10 @@ suite("User Model tests", () => {
     assert.equal(returnedUsers.length, 3);
   });
 
-
-
   test("create a user - successful ", async () => {
     await db.userStore.deleteAll();
     const newUser = await db.userStore.addUser(maggie);
-    console.log(newUser)
+    console.log(newUser);
     assertSubset(maggie, newUser);
   });
 
@@ -99,6 +96,16 @@ suite("User Model tests", () => {
     updatedUser.email = "bart@simpson2.com";
     updatedUser._id = user._id;
     const outcome = await expect(db.userStore.updateUser(user._id, updatedUser)).to.be.rejectedWith("Another user is already using that email address");
-    console.log(outcome)
+    console.log(outcome);
+  });
+
+  test("check if administrator", async () => {
+    const newAdmin = await db.userStore.addUser(maggie);
+    await db.userStore.makeAdmin(newAdmin._id);
+    const adminStatus = await db.userStore.checkAdmin(maggie._id);
+    assert.equal(adminStatus, true);
+    await db.userStore.revokeAdmin(newAdmin._id);
+    const revokedStatus = await db.userStore.checkAdmin(maggie._id);
+    assert.equal(revokedStatus, false);
   });
 });
