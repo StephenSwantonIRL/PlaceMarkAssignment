@@ -5,7 +5,7 @@ import { assertSubset, assertObjectinArray } from "../test-utils.js";
 
 suite("Category Model tests", () => {
   setup(async () => {
-    db.init("mem");
+    db.init("json");
     await db.categoryStore.deleteAll();
     await db.placeStore.deleteAll();
     const svalbardInDb = await db.placeStore.addPlace(svalbard);
@@ -112,7 +112,7 @@ suite("Category Model tests", () => {
     assert.deepEqual(category, returnedCategory2);
   });
 
-  test("get a categories a place is tagged with - success", async () => {
+  test("get the categories a place is tagged with - success", async () => {
     const categoryOne = await db.categoryStore.addCategory(isolatedPlaces);
     const categoryTwo = await db.categoryStore.addCategory(curiousContraptions);
     await db.categoryStore.addPlace(svalbard._id, categoryOne._id);

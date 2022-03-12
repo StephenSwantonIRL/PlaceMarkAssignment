@@ -4,6 +4,7 @@ import {
   PlaceArray,
   PlaceSpecAPI,
   PlaceSpecPlus,
+  PlaceSpecPlusWithCategoriesObject,
   IdSpec,
 } from "../src/models/joi-schemas.js";
 import { validationError} from "./logger.js";
@@ -34,6 +35,9 @@ export const placeApi = {
         if (!place) {
           return Boom.notFound("No PlaceMark with this id");
         }
+        const returnedCategories = await db.categoryStore.getCategoriesByPlace(place._id);
+        place.categories = returnedCategories;
+        console.log(place)
         return place;
       } catch (err) {
         return Boom.serverUnavailable("No PlaceMark with this id");
@@ -43,7 +47,7 @@ export const placeApi = {
     description: "Gets details related to a Place",
     notes: "Returns details of a Place based on the ID provided",
     validate: { params: { id: IdSpec }, failAction: validationError },
-    response: { schema: PlaceSpecPlus, failAction: validationError }
+    response: { schema: PlaceSpecPlusWithCategoriesObject, failAction: validationError }
   },
 
   create: {

@@ -47,7 +47,9 @@
         <td>{{location}}</td>
         <td>{{latitude}}</td>
         <td>{{longitude}}</td>
-        <td></td>
+        <td><button onclick="openModal('{{_id}}')">
+          View
+        </button></td>
       </tr>
     {{/each}}
     </tbody>
@@ -56,10 +58,13 @@
 <dialog id="modal-dialog">
   <div class="container"><h2 class="title is-2" id="placeMarkName"></h2></div>
   <div class="container"><div class="label">Location</div><div><h4 id="placeMarkLocation"></h4></div></div>
-  <div class="container"><div><div class="label">Latitude</div><div><p id="placeMarkLatitude"></p></div><div><div><div class="label">Longitude</div><div><p id="placeMarkLongitude"></p></div></div></div>
+  <div class="container">
+    <div class="label">Latitude</div><div><p id="placeMarkLatitude"></p></div>
+    <div><div><div class="label">Longitude</div><div><p id="placeMarkLongitude"></p></div></div></div>
+  </div>
   <div class="container"><h4 class="title is-4">About this PlaceMark</h4></div>
   <div class="container" id="placeMarkDescription"></div>
-
+  <div class="container" id="placeMarkCategories"></div>
   <p><a onclick="closeModal()">Close</a></p>
 </dialog>
 
@@ -79,9 +84,19 @@
         document.getElementById('placeMarkLatitude').innerText = placeMark.latitude;
         document.getElementById('placeMarkLongitude').innerText = placeMark.longitude;
         document.getElementById('placeMarkDescription').innerHTML = placeMark.description;
+
+        if (placeMark.categories.length > 0) {
+          let categories = ""
+          for (let i = 0; i < placeMark.categories.length; i += 1) {
+            categories = categories.concat(placeMark.categories[i].name)
+            if( i < (categories.length-1)){
+              categories.concat(", ")
+            }
+          }
+          document.getElementById('placeMarkCategories').innerHTML = "<strong>Categories:</strong> " + categories;
+        }
         document.querySelector("#modal-dialog").showModal();
       })
-
   }
   function closeModal(){
     document.querySelector("#modal-dialog").close();
