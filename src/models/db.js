@@ -6,6 +6,7 @@ import { placeMemStore } from "./mem/place-mem-store.js";
 import { placeMongoStore } from "./mongo/place-mongo-store.js";
 import { categoryMemStore } from "./mem/category-mem-store.js";
 import { categoryJsonStore } from "./json/category-json-store.js";
+import { categoryMongoStore } from "./mongo/category-mongo-store.js";
 import { connectMongo } from "./mongo/connect.js";
 
 export const db = {
@@ -23,7 +24,7 @@ export const db = {
       case "mongo" :
         this.userStore = userMongoStore;
         this.placeStore = placeMongoStore;
-        this.categoryStore = categoryJsonStore;
+        this.categoryStore = categoryMongoStore;
         connectMongo();
         break;
       default :

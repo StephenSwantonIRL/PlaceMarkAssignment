@@ -5,7 +5,7 @@ import { assertSubset, assertObjectinArray } from "../test-utils.js";
 
 suite("Category Model tests", () => {
   setup(async () => {
-    db.init("json");
+    db.init("mem");
     await db.categoryStore.deleteAll();
     await db.placeStore.deleteAll();
     const svalbardInDb = await db.placeStore.addPlace(svalbard);
@@ -33,7 +33,7 @@ suite("Category Model tests", () => {
   test("delete a category - fail - bad id ", async () => {
     const allCategoriesPre = await db.categoryStore.getAllCategories();
     const adminUser = true;
-    await db.categoryStore.deleteCategoryById("bad-id", adminUser);
+    await db.categoryStore.deleteCategoryById("622cdc48fd9cca364d1e344a", adminUser);
     const allCategoriesPost = await db.categoryStore.getAllCategories();
     assert.equal(allCategoriesPre.length, allCategoriesPost.length);
   });
@@ -63,14 +63,14 @@ suite("Category Model tests", () => {
     const category = await db.categoryStore.addCategory(isolatedPlaces);
     isolatedPlaces._id = category._id;
     const adminUser = true;
-    assert.deepEqual(category, isolatedPlaces);
+    assertSubset(isolatedPlaces, category);
     const allCategories = await db.categoryStore.getAllCategories();
     const updatedCategory = updatedIsolatedPlaces;
     updatedCategory._id = category._id;
     await db.categoryStore.updateCategory(category._id, updatedCategory);
     const finalCategory = await db.categoryStore.getCategoryById(category._id);
     const finalCategories = await db.categoryStore.getAllCategories();
-    assert.deepEqual(finalCategory, updatedCategory);
+    assertSubset(updatedCategory, finalCategory);
     assert.equal(allCategories.length, finalCategories.length);
   });
 
@@ -78,7 +78,7 @@ suite("Category Model tests", () => {
     const newCategory = await db.categoryStore.addCategory(isolatedPlaces);
     await db.categoryStore.addPlace(svalbard._id, newCategory._id);
     await db.categoryStore.addPlace(sealIsland._id, newCategory._id);
-    const places = await db.categoryStore.getPlaces(isolatedPlaces._id);
+    const places = await db.categoryStore.getPlaces(newCategory._id);
     assertSubset(svalbard, places);
     assertSubset(sealIsland, places);
   });
@@ -118,9 +118,9 @@ suite("Category Model tests", () => {
     await db.categoryStore.addPlace(svalbard._id, categoryOne._id);
     await db.categoryStore.addPlace(svalbard._id, categoryTwo._id);
     const categories = await db.categoryStore.getCategoriesByPlace(svalbard._id);
-    assert.deepEqual(categories, [
+    assertSubset([
       { name: categoryOne.name, _id: categoryOne._id },
       { name: categoryTwo.name, _id: categoryTwo._id },
-    ]);
+    ], categories);
   });
 });
