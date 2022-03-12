@@ -5,7 +5,7 @@ import { assertSubset, assertObjectinArray } from "../test-utils.js";
 
 suite("Category Model tests", () => {
   setup(async () => {
-    db.init("json");
+    db.init("mem");
     await db.categoryStore.deleteAll();
     await db.placeStore.deleteAll();
     const svalbardInDb = await db.placeStore.addPlace(svalbard);

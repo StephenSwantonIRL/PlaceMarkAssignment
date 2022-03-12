@@ -78,6 +78,15 @@ export const categoryMemStore = {
     return returnedCategory;
   },
 
+  async getCategoriesByPlace(placeId) {
+    const returnedCategories = this.categories.filter((category) => category.places.includes(placeId));
+    const clone = _.cloneDeep(returnedCategories);
+    for (let i = 0; i < clone.length; i += 1) {
+      delete clone[i].places;
+    }
+    return clone;
+  },
+
   async updateCategory(id, updatedCategory) {
     let category = await this.getCategoryById(id);
     category.name = updatedCategory.name;

@@ -4,7 +4,9 @@ import { fileURLToPath } from "url";
 import { join, dirname } from "path";
 // eslint-disable-next-line import/no-unresolved
 import { JSONFile, Low } from "lowdb";
+import _ from "lodash";
 import { placeJsonStore } from "./place-json-store.js";
+import { svalbard } from "../../../test/fixtures.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const file = join(__dirname, "categories.json");
@@ -71,7 +73,7 @@ export const categoryJsonStore = {
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < category.places.length; i++) {
       // eslint-disable-next-line no-await-in-loop
-      let returnedPlace = await placeJsonStore.getPlaceById(category.places[i]);
+      const returnedPlace = await placeJsonStore.getPlaceById(category.places[i]);
       places.push(returnedPlace);
     }
     return places;
@@ -95,6 +97,15 @@ export const categoryJsonStore = {
     return returnedCategory;
   },
 
+  async getCategoriesByPlace(placeId) {
+    await db.read();
+    const returnedCategories = db.data.categories.filter((category) => category.places.includes(placeId));
+    const clone = _.cloneDeep(returnedCategories);
+    for (let i = 0; i < clone.length; i += 1) {
+      delete clone[i].places;
+    }
+    return clone;
+  },
 
   async deleteCategoryById(id, isAdmin) {
     const categoryInDb = await this.getCategoryById(id);
