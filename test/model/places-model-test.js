@@ -7,7 +7,7 @@ import _ from 'lodash';
 suite("Place Model tests", () => {
 
   setup(async () => {
-    db.init("mem");
+    db.init("json");
     await db.placeStore.deleteAll();
   });
 
