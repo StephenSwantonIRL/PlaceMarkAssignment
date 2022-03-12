@@ -85,6 +85,7 @@ suite("User Model tests", () => {
     assert.deepEqual(user, maggie);
     const updatedUser = updatedMaggie;
     updatedUser._id = user._id;
+    updatedUser.isAdmin = false;
     await db.userStore.updateUser(user._id, updatedUser);
     const finalUser = await db.userStore.getUserById(user._id);
     assert.deepEqual(finalUser, updatedUser);
@@ -95,6 +96,7 @@ suite("User Model tests", () => {
     const updatedUser = updatedMaggie;
     updatedUser.email = "bart@simpson2.com";
     updatedUser._id = user._id;
+    updatedUser.isAdmin = false;
     const outcome = await expect(db.userStore.updateUser(user._id, updatedUser)).to.be.rejectedWith("Another user is already using that email address");
     console.log(outcome);
   });
