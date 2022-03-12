@@ -5,7 +5,7 @@ import { join, dirname } from "path"
 import { JSONFile, Low } from "lowdb";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const file = join(__dirname, 'users.json')
+const file = join(__dirname, "users.json")
 const db = new Low(new JSONFile(file));
 db.data = { users: [] }
 
@@ -18,14 +18,13 @@ export const userJsonStore = {
   async addUser(user) {
     await db.read();
     const userInDb = await this.getUserByEmail(user.email);
-    console.log(userInDb)
     if (!user.firstName || !user.lastName || !user.email || !user.password) {
       return new Error("Incomplete User Information");
     } else if (userInDb === null) {
       user._id = v4();
+      user.isAdmin = false;
       db.data.users.push(user);
       await db.write();
-      console.log(user)
       return user;
     } else {
       // eslint-disable-next-line no-throw-literal
@@ -82,6 +81,34 @@ export const userJsonStore = {
     }
   },
 
+  async checkAdmin(id) {
+    await db.read();
+    const u = db.data.users.find((user) => user._id === id);
+    console.log(u)
+    if (u !== undefined) return u.isAdmin;
+    return null;
+  },
+
+  async makeAdmin(userId) {
+    const user = await this.getUserById(userId);
+    if (user !== null) {
+      user.isAdmin = true;
+      await db.write();
+      return user.isAdmin;
+    } else {
+      return Promise.reject(Error("User does not exist"));
+    }
+  },
+
+  async revokeAdmin(userId) {
+    const user = await this.getUserById(userId);
+    if (user !== null) {
+      user.isAdmin = false;
+      await db.write();
+      return user.isAdmin;
+    } else {
+      return Promise.reject(Error("User does not exist"));
+    }
+  },
 };
 
-//userJsonStore.getUserByEmail("stephenswanton@gmail.com").then((data) => console.log(data))

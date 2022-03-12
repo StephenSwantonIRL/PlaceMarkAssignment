@@ -70,4 +70,30 @@ export const userMemStore = {
     this.users = [];
     return this.users;
   },
+
+  async checkAdmin(id) {
+    const u = this.users.find((user) => user._id === id);
+    if (u !== undefined) return u.isAdmin;
+    return null;
+  },
+
+  async makeAdmin(userId) {
+    const user = await this.getUserById(userId);
+    if (user !== null) {
+      user.isAdmin = true;
+      return user.isAdmin;
+    } else {
+      return Promise.reject(Error("User does not exist"));
+    }
+  },
+
+  async revokeAdmin(userId) {
+    const user = await this.getUserById(userId);
+    if (user !== null) {
+      user.isAdmin = false;
+      return user.isAdmin;
+    } else {
+      return Promise.reject(Error("User does not exist"));
+    }
+  },
 };
