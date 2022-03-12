@@ -20,6 +20,10 @@ export const webRoutes = [
   { method: "GET", path: "/about", config: aboutController.index },
 
   { method: "GET", path: "/dashboard", config: dashboardController.index },
+  { method: "GET", path: "/admin", config: dashboardController.admin },
+  { method: "GET", path: "/makeAdmin/{id}", config: dashboardController.makeAdmin },
+  { method: "GET", path: "/revokeAdmin/{id}", config: dashboardController.revokeAdmin },
+  { method: "GET", path: "/deleteUser/{id}", config: dashboardController.deleteUser },
   { method: "POST", path: "/addCategory", config: dashboardController.addCategory },
   { method: "GET", path: "/deleteCategory/{id}", config: dashboardController.deleteCategory },
   { method: "POST", path: "/editCategory/{id}", config: dashboardController.editCategory },
