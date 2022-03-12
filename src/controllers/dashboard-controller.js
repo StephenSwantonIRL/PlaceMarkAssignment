@@ -37,6 +37,14 @@ export const dashboardController = {
       const outcome = await db.categoryStore.deleteCategoryById(categoryId, true);
       return h.redirect("/dashboard")
     }
+  },
+
+  editCategory: {
+    handler: async function(request, h) {
+      const categoryId = request.params.id;
+      const outcome = await db.categoryStore.updateCategory(categoryId, request.payload);
+      return h.redirect("/dashboard")
+    }
   }
 
 };
