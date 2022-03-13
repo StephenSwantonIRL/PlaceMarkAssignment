@@ -1,6 +1,6 @@
 import axios from "axios";
 import { serviceUrl } from "../fixtures.js";
-import { svalbard} from "../fixtures.js";
+import { svalbard } from "../fixtures.js";
 
 export const placeMarkService = {
   placeMarkUrl: serviceUrl,
@@ -86,12 +86,19 @@ export const placeMarkService = {
   },
 
   async addPlaceToCategory(placeId, categoryId) {
-    const res = await axios.post(`${this.placeMarkUrl}/api/placemark/category/${categoryId}/places`, { "placeId": placeId });
+    const res = await axios.post(`${this.placeMarkUrl}/api/placemark/category/${categoryId}/places`, { placeId: placeId });
     return res.data;
   },
 
+  async authenticate(user) {
+    const response = await axios.post(`${this.placeMarkUrl}/api/users/authenticate`, user);
+    // eslint-disable-next-line dot-notation
+    axios.defaults.headers.common["Authorization"] = `Bearer ${  response.data.token}`;
+    return response.data;
+  },
 
-
+  async clearAuth() {
+    // eslint-disable-next-line dot-notation
+    axios.defaults.headers.common["Authorization"] = "";
+  },
 };
-
-

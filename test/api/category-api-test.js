@@ -3,11 +3,13 @@ import { placeMarkService } from "./placemark-service.js";
 import { db } from "../../src/models/db.js";
 import { assertSubset } from "../test-utils.js";
 
-import { svalbard, sealIsland, isolatedPlaces } from "../fixtures.js";
+import { svalbard, sealIsland, isolatedPlaces, maggie, maggieCredentials } from "../fixtures.js";
 
 suite("Category API tests", () => {
   setup(async () => {
     db.init("mem");
+    await placeMarkService.createUser(maggie);
+    await placeMarkService.authenticate(maggieCredentials);
     await placeMarkService.deleteAllCategories();
   });
 
@@ -17,6 +19,7 @@ suite("Category API tests", () => {
     const returnedCategory = await placeMarkService.createCategory(isolatedPlaces);
     assert.isNotNull(returnedCategory);
     assertSubset(isolatedPlaces, returnedCategory);
+    await placeMarkService.deleteAllUsers();
   });
 
   test("return a category", async () => {
@@ -24,6 +27,7 @@ suite("Category API tests", () => {
     const returnedCategory = await placeMarkService.getCategory(createdCategory._id);
     assert.isNotNull(returnedCategory);
     assertSubset(isolatedPlaces, returnedCategory);
+    await placeMarkService.deleteAllUsers();
   });
 
   test("attempt to return a non-existent category", async () => {
@@ -33,6 +37,7 @@ suite("Category API tests", () => {
     } catch (error) {
       assert(error.response.data.message === "No Category with this id", "Incorrect Response Message");
     }
+    await placeMarkService.deleteAllUsers();
   });
 
   test("delete a category", async () => {
@@ -45,6 +50,7 @@ suite("Category API tests", () => {
     } catch (error) {
       assert(error.response.data.message === "No Category with this id", "Incorrect Response Message");
     }
+    await placeMarkService.deleteAllUsers();
   });
 
   test("add place to a category", async () => {
@@ -53,6 +59,7 @@ suite("Category API tests", () => {
     const returnedCategory = await placeMarkService.addPlaceToCategory(returnedPlace._id, createdCategory._id);
     assert.isNotNull(returnedCategory);
     assertSubset(isolatedPlaces, returnedCategory);
+    await placeMarkService.deleteAllUsers();
   });
 
   test("get places in a category", async () => {
@@ -67,6 +74,7 @@ suite("Category API tests", () => {
     assert.isNotNull(returnedPlaces);
     assertSubset(svalbard, returnedPlaces);
     assertSubset(sealIsland, returnedPlaces);
+    await placeMarkService.deleteAllUsers();
   });
 
   test("delete place from a category", async () => {
@@ -82,5 +90,6 @@ suite("Category API tests", () => {
     const returnedPlacesPost = await placeMarkService.getPlacesInCategory(createdCategory._id);
     assert.isFalse(assertSubset(svalbard, returnedPlacesPost));
     assertSubset(sealIsland, returnedPlacesPost);
+    await placeMarkService.deleteAllUsers();
   });
 });

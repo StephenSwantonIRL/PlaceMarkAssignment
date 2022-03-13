@@ -13,7 +13,9 @@ import { validationError} from "./logger.js";
 
 export const categoryApi = {
   find: {
-    auth: false,
+    auth: {
+      strategy: "jwt",
+    },
     handler: async function(request, h) {
       try {
         const categories = await db.categoryStore.getAllCategories();
@@ -30,7 +32,9 @@ export const categoryApi = {
   },
 
   findOne: {
-    auth: false,
+    auth: {
+      strategy: "jwt",
+    },
     handler: async function(request, h) {
       try {
         const category = await db.categoryStore.getCategoryById(request.params.id);
@@ -50,7 +54,9 @@ export const categoryApi = {
   },
 
   create: {
-    auth: false,
+    auth: {
+      strategy: "jwt",
+    },
     handler: async function (request, h) {
       try {
         const category = request.payload;
@@ -71,7 +77,9 @@ export const categoryApi = {
   },
 
   deleteOne: {
-    auth: false,
+    auth: {
+      strategy: "jwt",
+    },
     handler: async function (request, h) {
       try {
         const category = await db.categoryStore.getCategoryById(request.params.id);
@@ -91,7 +99,9 @@ export const categoryApi = {
   },
 
   deleteAll: {
-    auth: false,
+    auth: {
+      strategy: "jwt",
+    },
     handler: async function (request, h) {
       try {
         await db.categoryStore.deleteAll();
@@ -106,7 +116,9 @@ export const categoryApi = {
   },
 
   getPlaces: {
-    auth: false,
+    auth: {
+      strategy: "jwt",
+    },
     handler: async function(request, h) {
       try {
         const places = await db.categoryStore.getPlaces(request.params.id);
@@ -123,7 +135,9 @@ export const categoryApi = {
   },
 
   removePlace: {
-    auth: false,
+    auth: {
+      strategy: "jwt",
+    },
     handler: async function (request, h) {
       try {
         const category = await db.categoryStore.getCategoryById(request.params.categoryId);
@@ -149,7 +163,9 @@ export const categoryApi = {
   },
 
   addPlace: {
-    auth: false,
+    auth: {
+      strategy: "jwt",
+    },
     handler: async function (request, h) {
       try {
         const newPlace = await db.categoryStore.addPlace(request.payload.placeId, request.params.categoryId);

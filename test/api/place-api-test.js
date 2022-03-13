@@ -1,18 +1,18 @@
 import { assert } from "chai";
 import { placeMarkService } from "./placemark-service.js";
-import { db } from "../../src/models/db.js"
+import { db } from "../../src/models/db.js";
 import { assertSubset } from "../test-utils.js";
 
-import { longplayer, svalbard, incompleteSvalbard, updatedSvalbard, sealIsland } from "../fixtures.js";
+import { longplayer, svalbard, maggie, maggieCredentials } from "../fixtures.js";
 
 suite("PlaceMark API tests", () => {
-
   let user = null;
 
   setup(async () => {
     db.init("mem");
-     await placeMarkService.deleteAllPlaces();
-     //svalbard.createdBy = 2234347347;
+    await placeMarkService.createUser(maggie);
+    await placeMarkService.authenticate(maggieCredentials);
+    await placeMarkService.deleteAllPlaces();
   });
 
   teardown(async () => {});
@@ -21,14 +21,15 @@ suite("PlaceMark API tests", () => {
     const returnedPlace = await placeMarkService.createPlace(svalbard);
     assert.isNotNull(returnedPlace);
     assertSubset(svalbard, returnedPlace);
-
+    await placeMarkService.deleteAllUsers();
   });
 
   test("return a place", async () => {
     const createdPlace = await placeMarkService.createPlace(svalbard);
-    const returnedPlace = await placeMarkService.getPlace(createdPlace._id)
+    const returnedPlace = await placeMarkService.getPlace(createdPlace._id);
     assert.isNotNull(returnedPlace);
     assertSubset(svalbard, returnedPlace);
+    await placeMarkService.deleteAllUsers();
   });
 
   test("attempt to return a non-existent place", async () => {
@@ -38,6 +39,7 @@ suite("PlaceMark API tests", () => {
     } catch (error) {
       assert(error.response.data.message === "No PlaceMark with this id", "Incorrect Response Message");
     }
+    await placeMarkService.deleteAllUsers();
   });
 
   test("delete a place", async () => {
@@ -50,6 +52,6 @@ suite("PlaceMark API tests", () => {
     } catch (error) {
       assert(error.response.data.message === "No PlaceMark with this id", "Incorrect Response Message");
     }
+    await placeMarkService.deleteAllUsers();
   });
-
 });

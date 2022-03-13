@@ -86,3 +86,10 @@ export const CategoryIdSpec = Joi.object().keys({
 export const UserArray = Joi.array().items(UserSpecPlus).label("UserArray");
 export const PlaceArray = Joi.array().items(PlaceSpecPlus).label("PlaceArray");
 export const CategoryArray = Joi.array().items(CategorySpecPlus).label("CategoryArray");
+
+export const JwtAuth = Joi.object()
+  .keys({
+    success: Joi.boolean().example("true").required(),
+    token: Joi.string().example("eyJhbGciOiJND.g5YmJisIjoiaGYwNTNjAOhE.gCWGmY5-YigQw0DCBo").required(),
+  })
+  .label("JwtAuth");
