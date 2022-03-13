@@ -1,8 +1,8 @@
+/* eslint-disable no-else-return */
 import _ from "lodash";
 import { Category } from "./category.js";
-import { placeMongoStore} from "./place-mongo-store.js";
-import { db } from "../db.js";
-import { isolatedPlaces, sealIsland, svalbard } from "../../../test/fixtures.js";
+import { placeMongoStore } from "./place-mongo-store.js";
+
 
 export const categoryMongoStore = {
   async getAllCategories() {
@@ -35,7 +35,7 @@ export const categoryMongoStore = {
       if (category === null || place === null) {
         return new Error("Unable to find Category or Place");
       } else {
-        await Category.updateOne({ _id: categoryId }, { $push: { "places": id } });
+        await Category.updateOne({ _id: categoryId }, { $push: { places: id } });
         const outcome = await this.getCategoryById(categoryId);
         return outcome;
       }
@@ -59,7 +59,7 @@ export const categoryMongoStore = {
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < category[0].places.length; i++) {
       // eslint-disable-next-line no-await-in-loop
-      let pl = await placeMongoStore.getPlaceById(category[0].places[i]);
+      const pl = await placeMongoStore.getPlaceById(category[0].places[i]);
       p.push(pl);
     }
     return p;
@@ -71,9 +71,9 @@ export const categoryMongoStore = {
   },
 
   async getCategoriesByPlace(placeId) {
-    const returnedCategories = await Category.find( {places: {$in: placeId}}).lean()
+    const returnedCategories = await Category.find({ places: { $in: [placeId] } }).lean();
     const clone = _.cloneDeep(returnedCategories);
-    console.log(clone)
+    console.log(clone);
     for (let i = 0; i < clone.length; i += 1) {
       delete clone[i].places;
     }
@@ -88,7 +88,7 @@ export const categoryMongoStore = {
       if (category === null) {
         return new Error("Unable to find Category");
       } else {
-        await Category.updateOne({ _id: categoryId }, {$pull: {places: {$in: placeId}}});
+        await Category.updateOne({ _id: categoryId }, { $pull: { places: { $in: placeId } } });
         const updatedCategory = await this.getCategoryById(categoryId);
         return updatedCategory;
       }
@@ -105,8 +105,8 @@ export const categoryMongoStore = {
         return new Error("No Category with that Id");
       }
     } else {
-        return new Error("Unable to complete request. Please ensure valid Category Id and Administrator");
-      }
+      return new Error("Unable to complete request. Please ensure valid Category Id and Administrator");
+    }
   },
 
   async deleteAll() {

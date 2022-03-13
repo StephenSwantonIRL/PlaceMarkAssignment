@@ -40,15 +40,17 @@ export const placeMongoStore = {
         images: updatedPlace.images,
       }
     );
+    const amendedPlace = await this.getPlaceById(id);
+    return amendedPlace;
   },
 
   async getUserPlaces(id) {
-    const places = await Place.find({ _id: id }).lean();
+    const places = await Place.find({ createdBy: id }).lean();
     return places;
   },
 
-  async getOtherPlaces(id) {
-    const places = await Place.find({ _id: { $ne: id } }).lean();
+  async getOtherUserPlaces(id) {
+    const places = await Place.find({ createdBy: { $ne: id } }).lean();
     return places;
   },
 
