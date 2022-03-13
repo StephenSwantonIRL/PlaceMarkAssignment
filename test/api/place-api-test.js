@@ -11,7 +11,7 @@ suite("PlaceMark API tests", () => {
 
   setup(async () => {
     db.init("mem");
-     //await placeMarkService.deleteAllPlaces();
+     await placeMarkService.deleteAllPlaces();
      //svalbard.createdBy = 2234347347;
   });
 

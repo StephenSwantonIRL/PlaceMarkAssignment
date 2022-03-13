@@ -1,4 +1,5 @@
 import Boom from "@hapi/boom";
+import _ from "lodash";
 import { db } from "../src/models/db.js";
 import {
   CategoryArray,
@@ -130,7 +131,8 @@ export const categoryApi = {
           return Boom.notFound("No Category with this id");
         }
         const {places} = category
-        if (places.includes(request.params.placeId)) {
+        const placesArray = _.clone(places).map((object) => object.toString());
+        if (placesArray.includes(request.params.placeId)) {
           await db.categoryStore.deletePlace(request.params.placeId, request.params.categoryId);
           return h.response().code(204);
         } else {
@@ -150,8 +152,6 @@ export const categoryApi = {
     auth: false,
     handler: async function (request, h) {
       try {
-        console.log("payload")
-        console.log(request.payload)
         const newPlace = await db.categoryStore.addPlace(request.payload.placeId, request.params.categoryId);
         if (newPlace) {
           return h.response(newPlace).code(201);

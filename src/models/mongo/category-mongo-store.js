@@ -55,7 +55,6 @@ export const categoryMongoStore = {
 
   async getPlaces(id) {
     const category = await Category.find({ _id: id }).lean();
-    console.log(category[0])
     const p = [];
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < category[0].places.length; i++) {

@@ -29,14 +29,15 @@ export const PlaceSpec = Joi.object()
   })
   .label("PlaceDetails");
 
+export const IdSpec = Joi.alternatives().try(Joi.string(), Joi.object()).description("a valid ID");
+
 export const CategorySpec = Joi.object()
   .keys({
     name: Joi.string().example("Isolated Places").required(),
-    places: Joi.array().items(Joi.string()).optional(),
+    places: Joi.array().items(IdSpec).optional(),
   })
   .label("CategoryDetails");
 
-export const IdSpec = Joi.alternatives().try(Joi.string(), Joi.object()).description("a valid ID");
 
 export const PlaceSpecAPI = PlaceSpec.keys({
   createdBy: IdSpec,
