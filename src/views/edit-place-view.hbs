@@ -2,7 +2,7 @@
 
 <section class="section">
   <h1 class="title">Add a PlaceMark</h1>
-  <form action="/addPlace" method="POST">
+  <form action="/editPlace/{{place._id}}" method="POST">
     <div class="field">
       <label class="label">Name</label> <input class="input" type="text" placeholder="Enter PlaceMark Name" name="name" value="{{place.name}}">
     </div>

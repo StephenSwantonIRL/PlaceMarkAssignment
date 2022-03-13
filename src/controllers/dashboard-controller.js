@@ -1,12 +1,17 @@
-
-import _ from "lodash";
+import mongoose from "mongoose";
 import { db } from "../models/db.js";
+import { userMongoStore } from "../models/mongo/user-mongo-store.js";
 
 export const dashboardController = {
   index: {
     handler: async function (request, h) {
       const loggedInUser = request.auth.credentials;
-      const userId = request.state.placemark.id
+      let userId
+      if( db.userStore === userMongoStore) {
+        userId = mongoose.Types.ObjectId(request.state.placemark.id)
+      } else {
+        userId = request.state.placemark.id
+      }
       const isAdmin = await db.userStore.checkAdmin(userId);
       const myPlaceMarks = await db.placeStore.getUserPlaces(userId);
       const othersPlaceMarks = await db.placeStore.getOtherUserPlaces(userId);
