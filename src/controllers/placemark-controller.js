@@ -1,6 +1,7 @@
 /* eslint-disable no-await-in-loop */
 import { PlaceSpec, PlaceSpecWithCategory } from "../models/joi-schemas.js";
 import { db } from "../models/db.js";
+import Boom from "@hapi/boom";
 
 
 export const placeController = {
@@ -117,4 +118,21 @@ export const placeController = {
       return h.redirect("/dashboard");
     },
   },
+
+  findOne: {
+    handler: async function(request, h) {
+      try {
+        const place = await db.placeStore.getPlaceById(request.params.id);
+        if (!place) {
+          return Boom.notFound("No PlaceMark with this id");
+        }
+        const returnedCategories = await db.categoryStore.getCategoriesByPlace(place._id);
+        place.categories = returnedCategories;
+        console.log(place)
+        return place;
+      } catch (err) {
+        return Boom.serverUnavailable("No PlaceMark with this id");
+      }
+    },
+  }
 };
