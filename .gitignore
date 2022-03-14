@@ -131,3 +131,5 @@ dist
 
 # IDE
 .idea
+src/models/firebase/firebaseConfig.js
+src/models/firebase/firebaseConfig.js

@@ -10,7 +10,7 @@ chai.use(chaiAsPromised);
 
 suite("User Model tests", () => {
   setup(async () => {
-    db.init("mongo");
+    db.init("fire");
     await db.userStore.deleteAll();
     for (let i = 0; i < testUsers.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
@@ -68,7 +68,7 @@ suite("User Model tests", () => {
 
   test("get a user - bad params", async () => {
     assert.isNull(await db.userStore.getUserByEmail(""));
-    assert.isNull(await db.userStore.getUserById(""));
+    assert.isNull(await db.userStore.getUserById("ab"));
     assert.isNull(await db.userStore.getUserById());
   });
 

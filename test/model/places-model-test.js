@@ -6,7 +6,7 @@ import { assertSubset, assertObjectinArray } from "../test-utils.js";
 
 suite("Place Model tests", () => {
   setup(async () => {
-    db.init("mongo");
+    db.init("fire");
     await db.placeStore.deleteAll();
   });
 
@@ -17,7 +17,7 @@ suite("Place Model tests", () => {
     const allPlacesPost = await db.placeStore.getAllPlaces();
     assertSubset(svalbard, allPlacesPost);
     assert.notEqual(allPlacesPre, allPlacesPost);
-    assert.equal(allPlacesPost.length, allPlacesPre + 1);
+    assert.equal(allPlacesPost.length, allPlacesPre.length + 1);
   });
 
   test("create a place - failed - missing required parameter ", async () => {
@@ -28,7 +28,7 @@ suite("Place Model tests", () => {
 
   test("delete a place - fail - bad id ", async () => {
     const allPlacesPre = await db.placeStore.getAllPlaces();
-    await db.placeStore.deletePlaceById("622cdc48fd9cca364d1e344a", "user");
+    await db.placeStore.deletePlaceById("622cdc48fd9cca364d1e344a", "622cdc48fd9cca364d1e344a");
     const allPlacesPost = await db.placeStore.getAllPlaces();
     assert.equal(allPlacesPre.length, allPlacesPost.length);
   });
