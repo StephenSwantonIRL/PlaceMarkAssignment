@@ -7,9 +7,9 @@ import { longplayer, svalbard, maggie, maggieCredentials } from "../fixtures.js"
 
 suite("PlaceMark API tests", () => {
   let user = null;
-
+  db.init("mongo");
   setup(async () => {
-    db.init("mem");
+
     await placeMarkService.createUser(maggie);
     await placeMarkService.authenticate(maggieCredentials);
     await placeMarkService.deleteAllPlaces();

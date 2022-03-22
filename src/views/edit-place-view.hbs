@@ -1,7 +1,7 @@
 {{> menu active="placeMark"}}
 
 <section class="section">
-  <h1 class="title">Add a PlaceMark</h1>
+  <h1 class="title">Edit PlaceMark</h1>
   <form action="/editPlace/{{place._id}}" method="POST">
     <div class="field">
       <label class="label">Name</label> <input class="input" type="text" placeholder="Enter PlaceMark Name" name="name" value="{{place.name}}">
@@ -25,13 +25,14 @@
         {{place.description}}
         </textarea>
     </div>
+    {{> placemark-images }}
     <div class="field"><label class="label">Categories</label>
       <input id="input-custom-dropdown" name="categories" type="text" class="input" placeholder="Enter Categories" value="{{place.categories}}"></div>
     <div class="field" id="categories"></div>
 
 
     <div class="field is-grouped">
-      <button class="button is-link">Add PlaceMark</button>
+      <button class="button is-link">Save Changes</button>
     </div>
   </form>
 </section>
@@ -61,3 +62,4 @@
     }
   })
 </script>
+{{> placemark-imagejs}}

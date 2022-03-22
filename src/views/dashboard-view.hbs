@@ -68,6 +68,7 @@
   <div class="container"><h4 class="title is-4">About this PlaceMark</h4></div>
   <div class="container" id="placeMarkDescription"></div>
   <div class="container" id="placeMarkCategories"></div>
+  <div class="container" id="placeMarkImages"></div>
   <p><a onclick="closeModal()">Close</a></p>
 </dialog>
 
@@ -98,10 +99,21 @@
           }
           document.getElementById('placeMarkCategories').innerHTML = "<strong>Categories:</strong> " + categories;
         }
+        if (placeMark.images.length > 0){
+          for (let i = 0; i< placeMark.images.length; i += 1){
+            var img1 = document.createElement("img");
+            img1.setAttribute("src", placeMark.images[i])
+            img1.setAttribute("id", placeMark.images[i])
+            img1.setAttribute("width","100%")
+            img1.setAttribute("style", "padding-left:10px")
+            document.getElementById('placeMarkImages').append(img1)
+          }
+        }
         document.querySelector("#modal-dialog").showModal();
       })
   }
   function closeModal(){
     document.querySelector("#modal-dialog").close();
+    document.getElementById('placeMarkImages').innerHTML ="";
   }
 </script>

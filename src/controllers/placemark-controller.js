@@ -1,8 +1,8 @@
 /* eslint-disable no-await-in-loop */
+import Boom from "@hapi/boom";
 import { PlaceSpec, PlaceSpecWithCategory } from "../models/joi-schemas.js";
 import { db } from "../models/db.js";
-import Boom from "@hapi/boom";
-
+import { imageStore } from "../models/image-store.js";
 
 export const placeController = {
   index: {
@@ -33,8 +33,7 @@ export const placeController = {
         }
         place.categories = placeCategories;
       }
-
-      return h.view("edit-place-view", { title: "Editing", place: place, categories: categorylist });
+      return h.view("edit-place-view", { title: "Editing", place: place, images: place.images, categories: categorylist });
     },
   },
   save: {
@@ -48,6 +47,12 @@ export const placeController = {
     },
     handler: async function (request, h) {
       const place = request.payload;
+      if (request.payload.images) {
+        const imageString = request.payload.images;
+        const imageArray = imageString.split(",");
+        imageArray.pop();
+        place.images = imageArray;
+      }
       place.createdBy = request.state.placemark.id;
       const addPlace = await db.placeStore.addPlace(place);
       if (addPlace.message) {
@@ -78,6 +83,12 @@ export const placeController = {
     },
     handler: async function (request, h) {
       const updatedPlace = request.payload;
+      if (request.payload.images) {
+        const imageString = request.payload.images;
+        const imageArray = imageString.split(",");
+        imageArray.pop();
+        updatedPlace.images = imageArray;
+      }
       updatedPlace.createdBy = request.state.placemark.id;
       const updatePlace = await db.placeStore.updatePlace(request.params.id, updatedPlace);
       if (updatePlace.message) {
@@ -114,13 +125,12 @@ export const placeController = {
         }
       }
 
-
       return h.redirect("/dashboard");
     },
   },
 
   findOne: {
-    handler: async function(request, h) {
+    handler: async function (request, h) {
       try {
         const place = await db.placeStore.getPlaceById(request.params.id);
         if (!place) {
@@ -128,11 +138,33 @@ export const placeController = {
         }
         const returnedCategories = await db.categoryStore.getCategoriesByPlace(place._id);
         place.categories = returnedCategories;
-        console.log(place)
+        console.log(place);
         return place;
       } catch (err) {
         return Boom.serverUnavailable("No PlaceMark with this id");
       }
     },
-  }
+  },
+  uploadImage: {
+    handler: async function (request, h) {
+      try {
+        const file = request.payload.imagefile;
+        if (Object.keys(file).length > 0) {
+          const url = await imageStore.uploadImage(request.payload.imagefile);
+          //await db.placeStore.addImage(url, request.params.id);
+          return { url: url };
+        }
+        // return h.redirect(`/dashboard/${playlist._id}`);
+      } catch (err) {
+        console.log(err);
+        // return h.redirect(`/playlist/${playlist._id}`);
+      }
+    },
+    payload: {
+      multipart: true,
+      output: "data",
+      maxBytes: 209715200,
+      parse: true,
+    },
+  },
 };

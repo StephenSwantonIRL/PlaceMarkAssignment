@@ -6,7 +6,7 @@ import { assertSubset, assertObjectinArray } from "../test-utils.js";
 
 suite("Place Model tests", () => {
   setup(async () => {
-    db.init("fire");
+    db.init("mongo");
     await db.placeStore.deleteAll();
   });
 

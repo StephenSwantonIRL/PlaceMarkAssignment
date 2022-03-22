@@ -14,18 +14,23 @@ export const UserSpec = Joi.object()
   })
   .label("UserDetails");
 
-export const PlaceSpec = Joi.object()
+export const PlaceSpecBase = Joi.object()
   .keys({
     name: Joi.string().example("Longplayer").required(),
     location: Joi.string().example("London").required(),
     latitude: Joi.number().greater(-90).less(90).example(51.508514).required(),
     longitude: Joi.number().greater(-180).less(180).example(0.008079).required(),
-    images: Joi.array().items(Joi.string()),
     description: Joi.string()
       .example(
         "<p>If you miss hearing Longplayer on your next trip to London, you’ll get the chance to catch it again—the musical composition will be playing in the old lighthouse at Trinity Buoy Wharf for the next 1,000 years. Longplayer consists of six short recorded pieces written for Tibetan singing bowls that are transposed and combined in such a way that the variations will never repeat during the song’s millennium-long run. It began playing on December 31, 1999, and is scheduled to end in the dying seconds of 2999.</p><p>Custodians of the project have established the Longplayer Trust to devise ways of keeping the music alive in the face of the inevitable technological and social changes that will occur over the next ten centuries.</p>"
       )
       .optional(),
+  })
+  .label("PlaceDetails");
+
+export const PlaceSpec = PlaceSpecBase
+  .keys({
+    images: Joi.string().allow("", null).optional(),
   })
   .label("PlaceDetails");
 
@@ -39,7 +44,8 @@ export const CategorySpec = Joi.object()
   .label("CategoryDetails");
 
 
-export const PlaceSpecAPI = PlaceSpec.keys({
+export const PlaceSpecAPI = PlaceSpecBase.keys({
+  images: Joi.array().items(Joi.string()),
   createdBy: IdSpec,
 }).label("PlaceSpecAPI");
 

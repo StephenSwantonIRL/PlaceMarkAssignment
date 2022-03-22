@@ -1,4 +1,5 @@
 import { Place } from "./place.js";
+import { Category } from "./category.js";
 
 export const placeMongoStore = {
   async getAllPlaces() {
@@ -74,5 +75,18 @@ export const placeMongoStore = {
 
   async deleteAll() {
     await Place.deleteMany({});
+  },
+
+  async addImage(imageUrl, placeId) {
+    if (!imageUrl || !placeId) {
+      return new Error("Incomplete information provided");
+    }
+    const place = await this.getPlaceById(placeId);
+    if (place === null) {
+      return new Error("Unable to find Place");
+    }
+    await Place.updateOne({ _id: placeId }, { $push: { images: imageUrl } });
+    const outcome = await this.getPlaceById(placeId);
+    return outcome;
   },
 };

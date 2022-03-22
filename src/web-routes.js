@@ -19,6 +19,7 @@ export const webRoutes = [
   { method: "GET", path: "/deletePlace/{id}", config: placeController.delete },
   { method: "POST", path: "/addPlace", config: placeController.save },
   { method: "GET", path: "/getPlace/{id}", config: placeController.findOne },
+  { method: "POST", path: "/place/uploadimage", config: placeController.uploadImage },
 
   { method: "GET", path: "/about", config: aboutController.index },
 
