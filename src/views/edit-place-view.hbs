@@ -1,7 +1,9 @@
 {{> menu active="placeMark"}}
 
-<section class="section">
+<section class="section header">
   <h1 class="title">Edit PlaceMark</h1>
+</section>
+<section class="section">
   <form action="/editPlace/{{place._id}}" method="POST">
     <div class="field">
       <label class="label">Name</label> <input class="input" type="text" placeholder="Enter PlaceMark Name" name="name" value="{{place.name}}">

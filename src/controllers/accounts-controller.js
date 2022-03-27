@@ -31,7 +31,7 @@ export const accountsController = {
         const errorDetails = [{ message: addUser.message }];
         return h.view("signup-view", { title: "Sign up error", errors: errorDetails }).takeover().code(400);
       }
-      return h.redirect("/");
+      return h.redirect("/dashboard");
     },
   },
   showLogin: {

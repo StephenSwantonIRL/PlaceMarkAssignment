@@ -28,6 +28,7 @@ export const webRoutes = [
   { method: "GET", path: "/makeAdmin/{id}", config: dashboardController.makeAdmin },
   { method: "GET", path: "/revokeAdmin/{id}", config: dashboardController.revokeAdmin },
   { method: "GET", path: "/deleteUser/{id}", config: dashboardController.deleteUser },
+  { method: "GET", path: "/category/{id}", config: placeController.viewByCategory },
   { method: "POST", path: "/addCategory", config: dashboardController.addCategory },
   { method: "GET", path: "/deleteCategory/{id}", config: dashboardController.deleteCategory },
   { method: "POST", path: "/editCategory/{id}", config: dashboardController.editCategory },

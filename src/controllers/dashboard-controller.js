@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { db } from "../models/db.js";
 import { userMongoStore } from "../models/mongo/user-mongo-store.js";
+import _ from "lodash"
 
 export const dashboardController = {
   index: {
@@ -34,16 +35,32 @@ export const dashboardController = {
       const userId = request.state.placemark.id
       const isAdmin = await db.userStore.checkAdmin(userId);
       const users = await db.userStore.getAllUsers();
+      const places = await db.placeStore.getAllPlaces();
+      console.log(places)
+      const avgPlacesPerUser = (places.length/users.length).toFixed(2);
       if(isAdmin === false){
         return h.redirect("/dashboard");
       }
       const categories = await db.categoryStore.getAllCategories();
+      const avgPlacesPerCategory = (places.length/categories.length).toFixed(2);
+      const userCounts = []
+      for (let i = 0; i < users.length; i += 1){
+        const placeCount = places.filter((place) => place.createdBy == users[i]._id.toString());
+        userCounts.push({firstName:users[i].firstName, lastName: users[i].lastName, count: placeCount.length});
+      }
+      const topCounts = _.orderBy(userCounts, "count", "desc").slice(0,5)
       const viewData = {
         title: "Admin Dashboard",
         user: loggedInUser,
         categories: categories,
         isAdmin: isAdmin,
         users: users,
+        totalCategories: categories.length,
+        totalUsers: users.length,
+        totalPlaces: places.length,
+        avgPerCategory: avgPlacesPerCategory,
+        avgPerUser: avgPlacesPerUser,
+        topCounts: topCounts,
       };
       return h.view("admin-view", viewData);
     },

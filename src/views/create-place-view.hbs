@@ -1,7 +1,8 @@
 {{> menu active="addPlace"}}
 
-<section class="section">
+<section class="section header">
   <h1 class="title">Add a PlaceMark</h1>
+</section><section class="section">
   <form action="/addPlace" method="POST">
     <div class="field">
       <label class="label">Name</label> <input class="input" type="text" placeholder="Enter PlaceMark Name" name="name">
@@ -28,7 +29,7 @@
     <div class="field"><label class="label">Categories</label><input id="input-custom-dropdown" name="categories" type="text" class="input" placeholder="Enter Categories"></div>
     <div class="field" id="categories"></div>
     <div class="field is-grouped">
-      <button class="button is-link">Add PlaceMark</button>
+      <button id="submit" class="button is-link">Add PlaceMark</button>
     </div>
   </form>
 </section>

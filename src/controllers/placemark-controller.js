@@ -3,6 +3,8 @@ import Boom from "@hapi/boom";
 import { PlaceSpec, PlaceSpecWithCategory } from "../models/joi-schemas.js";
 import { db } from "../models/db.js";
 import { imageStore } from "../models/image-store.js";
+import { userMongoStore } from "../models/mongo/user-mongo-store.js";
+import mongoose from "mongoose";
 
 export const placeController = {
   index: {
@@ -151,13 +153,10 @@ export const placeController = {
         const file = request.payload.imagefile;
         if (Object.keys(file).length > 0) {
           const url = await imageStore.uploadImage(request.payload.imagefile);
-          //await db.placeStore.addImage(url, request.params.id);
           return { url: url };
         }
-        // return h.redirect(`/dashboard/${playlist._id}`);
       } catch (err) {
         console.log(err);
-        // return h.redirect(`/playlist/${playlist._id}`);
       }
     },
     payload: {
@@ -167,4 +166,29 @@ export const placeController = {
       parse: true,
     },
   },
+  viewByCategory: {
+    handler: async function (request, h) {
+      const loggedInUser = request.auth.credentials;
+      let userId
+      if( db.userStore === userMongoStore) {
+        userId = mongoose.Types.ObjectId(request.state.placemark.id)
+      } else {
+        userId = request.state.placemark.id
+      }
+      const isAdmin = await db.userStore.checkAdmin(userId);
+      const category = await db.categoryStore.getCategoryById(request.params.id);
+      const places  = await db.categoryStore.getPlaces(request.params.id)
+      const viewData = {
+        title: "Playtime Dashboard",
+        user: loggedInUser,
+        category: category,
+        isAdmin: isAdmin,
+        places: places,
+      };
+      console.log(viewData)
+      return h.view("category-view", viewData);
+    },
+  },
+
+
 };
