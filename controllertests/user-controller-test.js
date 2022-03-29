@@ -1,7 +1,7 @@
 import chai from "chai";
 import chaiHttp from "chai-http";
-import { userMemStore } from "../../src/models/mem/user-mem-store.js";
-import { maggie, suzie, stephen, testUsers, updatedMaggie } from "../fixtures.js";
+import { userMemStore } from "../src/models/mem/user-mem-store.js";
+import { maggie, suzie, stephen, testUsers, updatedMaggie } from "../test/fixtures.js";
 
 const should = chai.should();
 const { assert, expect } = chai;

@@ -45,7 +45,7 @@ export const CategorySpec = Joi.object()
 
 
 export const PlaceSpecAPI = PlaceSpecBase.keys({
-  images: Joi.array().items(Joi.string()),
+  images: Joi.array().items(Joi.string().allow("", null).optional()),
   createdBy: IdSpec,
 }).label("PlaceSpecAPI");
 

@@ -7,7 +7,7 @@ import { svalbard, sealIsland, isolatedPlaces, maggie, maggieCredentials } from 
 
 suite("Category API tests", () => {
   setup(async () => {
-    db.init("mongo");
+    db.init("fire");
     await placeMarkService.createUser(maggie);
     await placeMarkService.authenticate(maggieCredentials);
     await placeMarkService.deleteAllCategories();

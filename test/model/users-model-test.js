@@ -66,11 +66,6 @@ suite("User Model tests", () => {
     assert.isNull(deletedUser);
   });
 
-  test("get a user - bad params", async () => {
-    assert.isNull(await db.userStore.getUserByEmail(""));
-    assert.isNull(await db.userStore.getUserById("ab"));
-    assert.isNull(await db.userStore.getUserById());
-  });
 
   test("delete One User - fail", async () => {
     const allUsersPreTest = await _.clone(db.userStore.getAllUsers());

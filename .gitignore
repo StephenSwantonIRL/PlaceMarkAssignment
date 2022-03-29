@@ -137,3 +137,5 @@ src/models/firebase/firebaseConfig.js
 src/models/temp.img
 src/models/temp.img
 src/models/temp.img
+/controllertests/
+/controllertests/

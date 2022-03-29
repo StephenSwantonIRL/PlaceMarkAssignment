@@ -9,7 +9,7 @@ const users = new Array(testUsers.length);
 
 suite("User API tests", () => {
   setup(async () => {
-    db.init("mongo");
+    db.init("fire");
     await placeMarkService.createUser(maggie);
     await placeMarkService.authenticate(maggieCredentials);
     await placeMarkService.deleteAllUsers();
